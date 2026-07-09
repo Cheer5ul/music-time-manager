@@ -45,6 +45,7 @@
         dateTime createdAt
         enum status
         guid createdBy FK
+        guid recreatedFromTaskId FK "nullable"
     }
     SUBTASK {
         guid id PK
