@@ -1,41 +1,31 @@
-# 02 - Database Design
+# 📋 02 — Database Design
 
-## Entities 
+## Entities
 
-- User - пользователь системы. Аутентификация простая (логин/пароль), поэтому храним
-только username и passwordhash. Ролей пока что не предусмотрено - у всех одинаковые права 
-(см. Requirements, раздел 2).
-
-- Task - задание, создаваемое пользователем. User может создать много заданий. Имеет название, описание (необязательно),
-конечный срок, статус, дату когда оно было создано и пользователя, которым оно создано. Также содержит ноль или несколько подзаданий Subtask.
-
-- Subtask - подзадание, имеет название и статус. 
+- **User** — пользователь системы. Аутентификация простая (логин/пароль), храним только `username` и `passwordHash`. Ролей не предусмотрено.
+- **Task** — задание, создаваемое пользователем. `User` может создать много заданий. Имеет название, описание (необязательно), конечный срок, статус, дату создания и пользователя-создателя. Содержит ноль или несколько `Subtask`. Может ссылаться на другую задачу как на источник пересоздания (`recreatedFromTaskId`).
+- **Subtask** — подзадание, имеет название и статус. Принадлежит ровно одной `Task`. Собственного `dueDate` не имеет — срочность наследуется от родительской `Task`.
 
 ### Junction-Tables
 
-Промежуточные таблицы для реализации связи многие ко многим. 
-
-- Task_Assignees - Связывает Task и Users: у одной задачи может быть несколько исполнителей,
-а один исполнитель может быть исполнителем нескольких задачь
-
-- Subtask_Assignees - Связывает Subtask и Users: у одной подзадачи может быть несколько исполнителей,
-а один исполнитель может быть исполнителем нескольких подзадачь
-
+- **Task_Assignee** — связывает `Task` и `User`, многие-ко-многим.
+- **Subtask_Assignee** — то же для `Subtask`.
 
 ## ER Diagram
 
 ```mermaid
-   erDiagram
+erDiagram
     TASK }o--|| USER : creates
     TASK ||--|{ TASK_ASSIGNEE : has_assignees
     TASK_ASSIGNEE }o--|| USER : assigned_to
     TASK ||--o{ SUBTASK : has
+    TASK }o--o| TASK : recreated_from
     SUBTASK ||--|{ SUBTASK_ASSIGNEE : has_assignees
     SUBTASK_ASSIGNEE }o--|| USER : assigned_to
     USER {
         guid id PK
         string username
-        string passwordhash
+        string passwordHash
     }
     TASK {
         guid id PK
@@ -43,14 +33,15 @@
         string description "nullable"
         dateTime dueDate
         dateTime createdAt
-        enum status
+        enum status "ToDo | InProgress | Done"
         guid createdBy FK
+        guid recreatedFromTaskId FK "nullable, self-reference"
     }
     SUBTASK {
         guid id PK
         guid taskId FK
         string title
-        enum status
+        enum status "ToDo | InProgress | Done"
     }
     TASK_ASSIGNEE {
         guid taskId FK, PK
@@ -62,9 +53,23 @@
     }
 ```
 
+### Легенда кардинальности (Crow's Foot notation)
+ 
+| Слева | Справа | Значение |
+|---|---|---|
+| `\|o` | `o\|` | Zero or one |
+| `\|\|` | `\|\|` | Exactly one |
+| `}o` | `o{` | Zero or more (без верхнего предела) |
+| `}\|` | `\|{` | One or more (без верхнего предела) |
+ 
+Например, `TASK ||--|{ TASK_ASSIGNEE` читается: у одной `Task` — от одной до многих связей в `TASK_ASSIGNEE` (задача не может существовать без единого assignee — отсюда `|{`, а не `o{`), а у каждой записи `TASK_ASSIGNEE` — ровно одна `Task` (`||`).
+
 ## Design Decisions
 
-- Задание и подзадание имеют как минимум одного исполнителя. Это условие не может быть проверено в БД, поэтому 
-должно быть проверено в коде.
-
-- Junction-Tables имеют состовной PK, а не отдельный id. 
+- Задание и подзадание имеют как минимум одного исполнителя. FK не умеет проверить "минимум 1 связь" — проверяется в Service/Domain-слое.
+- Junction-таблицы имеют составной PK (`taskId + userId` / `subTaskId + userId`), суррогатный `id` не нужен.
+- `Subtask` намеренно не имеет `createdBy` — в проекте нет ограничения "редактирует только создатель" (см. `01-requirements.md`, раздел 5), поле не несёт функциональной нагрузки.
+- **`status` хранит только 3 значения: `ToDo | InProgress | Done`.** `Overdue` **не хранится** — вычисляется на чтении: `dueDate < UtcNow AND status != Done` (у Subtask — по `dueDate` родительской `Task`).
+  - Рассматривался вариант с 4-м хранимым значением + периодическая `IHostedService`-джоба, переводящая задачи в `Overdue`. Отклонён: даёт временное рассогласование БД с реальностью между тиками джобы, требует отдельно реализовывать обратный переход при переносе `dueDate`, и не даёт ничего, что не даёт вычисление на лету — лишняя сложность без выгоды на этом масштабе данных (команда 2-10 человек).
+  - `enum TaskStatus` — маппится в БД как `string` через `.HasConversion<string>()` в EF Core (не default `int`) — ради читаемости при отладке через SQL-клиент, цена пренебрежимо мала на этом объёме данных.
+- **`Task.recreatedFromTaskId`** — nullable self-referencing FK на `Task.Id`, а не булево поле. `recreatedFromTaskId != null` даёт флаг "это пересозданная задача" бесплатно, плюс даёт трассируемость к оригиналу, плюс позволяет проверить одним запросом, не пересоздавали ли уже конкретную просроченную задачу. Оригинальная задача при пересоздании не удаляется и не мутирует — остаётся в архиве как есть.
