@@ -1,0 +1,41 @@
+# === .NET ===
+bin/
+obj/
+out/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio (на случай если кто-то откроет в VS)
+.vs/
+
+# User-specific files
+*.user
+*.user.props
+
+# EF Core migrations bundle output (если будешь генерировать)
+*.dll.config
+
+# === Секреты — САМОЕ ВАЖНОЕ ===
+appsettings.Development.json
+appsettings.Local.json
+*.env
+.env
+.env.local
+
+# === Frontend (React/Vite) ===
+node_modules/
+dist/
+.vite/
+
+# Frontend env файлы
+frontend/.env
+frontend/.env.local
+
+# === OS-мусор ===
+.DS_Store
+Thumbs.db
+
+# === Логи ===
+*.log

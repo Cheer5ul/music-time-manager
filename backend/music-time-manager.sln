@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-time-manager.API", "music-time-manager.API\music-time-manager.API.csproj", "{0095E683-DAA6-4247-9B28-91231C3A4A5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-time-manager.Core", "music-time-manager.Core\music-time-manager.Core.csproj", "{B06CF39D-3202-4959-B093-A49997B83BF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-time-manager.Application", "music-time-manager.Application\music-time-manager.Application.csproj", "{C7C12F9F-FF56-4097-AD4A-4362FA5ED55B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-time-manager.Infrastructure", "music-time-manager.Infrastructure\music-time-manager.Infrastructure.csproj", "{B9D3A846-D18D-4910-9EB4-6D3592B6D4FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "music-time-manager.Persistence", "music-time-manager.Persistence\music-time-manager.Persistence.csproj", "{17D7CAAC-69B9-4F27-B12C-F8C73DAB5C1F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0095E683-DAA6-4247-9B28-91231C3A4A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0095E683-DAA6-4247-9B28-91231C3A4A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0095E683-DAA6-4247-9B28-91231C3A4A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0095E683-DAA6-4247-9B28-91231C3A4A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06CF39D-3202-4959-B093-A49997B83BF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06CF39D-3202-4959-B093-A49997B83BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06CF39D-3202-4959-B093-A49997B83BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06CF39D-3202-4959-B093-A49997B83BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C12F9F-FF56-4097-AD4A-4362FA5ED55B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C12F9F-FF56-4097-AD4A-4362FA5ED55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C12F9F-FF56-4097-AD4A-4362FA5ED55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C12F9F-FF56-4097-AD4A-4362FA5ED55B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9D3A846-D18D-4910-9EB4-6D3592B6D4FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D3A846-D18D-4910-9EB4-6D3592B6D4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D3A846-D18D-4910-9EB4-6D3592B6D4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D3A846-D18D-4910-9EB4-6D3592B6D4FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17D7CAAC-69B9-4F27-B12C-F8C73DAB5C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17D7CAAC-69B9-4F27-B12C-F8C73DAB5C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17D7CAAC-69B9-4F27-B12C-F8C73DAB5C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17D7CAAC-69B9-4F27-B12C-F8C73DAB5C1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

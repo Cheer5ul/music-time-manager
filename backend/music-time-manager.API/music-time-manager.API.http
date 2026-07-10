@@ -1,0 +1,6 @@
+@music_time_manager.API_HostAddress = http://localhost:5192
+
+GET {{music_time_manager.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
