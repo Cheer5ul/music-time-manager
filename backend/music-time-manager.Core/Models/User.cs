@@ -18,12 +18,10 @@ public class User
     
     public static ResultT<User> Create(string username, string passwordHash)
     {
-        
         if (string.IsNullOrWhiteSpace(username) || username.Length > MAX_USERNAME_LENGTH)
         {
             return ResultT<User>.Failures([UserErrors.InvalidUsername(username)]);
         }
-
         var user = new User(
             id: Guid.NewGuid(),
             username: username,
@@ -31,4 +29,9 @@ public class User
         
         return ResultT<User>.Success(user);
     }
-}
+
+    public static User Reconstitute(Guid id, string username, string passwordHash)
+    {
+        return new User(id, username, passwordHash);
+    }
+} 
