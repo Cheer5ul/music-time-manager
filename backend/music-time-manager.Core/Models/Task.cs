@@ -9,12 +9,13 @@ public class Task
     public const int MIN_TITLE_LENGTH = 2;
     public const int MAX_DESCRIPTION_LENGTH = 1000;
     private Task(
-        Guid id, string title, DateTime createdAt, Status status,
+        Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
         Guid createdBy, string? description, Guid? recreatedFromTaskId)
     {
         Id = id;
         Title = title;
         Description = description;
+        DueDate = dueDate;
         CreatedAt = createdAt;
         Status = status;
         CreatedBy = createdBy;
@@ -23,12 +24,13 @@ public class Task
     public Guid Id { get; private set; }
     public string Title { get; private set; }
     public string? Description { get; private set; }
+    public DateTime DueDate { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public Status Status { get; private set; }
     public Guid CreatedBy { get; private set; }
     public Guid? RecreatedFromTaskId { get; private set; }
 
-    public ResultT<Task> Create(string title, 
+    public ResultT<Task> Create(string title, DateTime dueDate,
         Guid createdBy, string? description, Guid? recreatedFromTaskId)
     {
         List<Error> errors = [];
@@ -45,6 +47,12 @@ public class Task
             errors.Add(TaskErrors.InvalidDescription(description));
         }
 
+        if (dueDate > DateTime.Now ||
+            DueDate - DateTime.Now > TimeSpan.FromDays(365))
+        {
+            errors.Add(TaskErrors.InvalidDueDate(dueDate));
+        }
+
         if (errors.Count > 0)
         {
             return ResultT<Task>.Failures(errors);
@@ -53,6 +61,7 @@ public class Task
         var task = new Task(
             id: Guid.NewGuid(),
             title: title,
+            dueDate: dueDate,
             createdAt: DateTime.Now,
             status: Status.ToDo,
             createdBy: createdBy,
@@ -62,10 +71,10 @@ public class Task
         return ResultT<Task>.Success(task);
     }
 
-    public static Task Reconstitute(Guid id, string title, DateTime createdAt, Status status,
+    public static Task Reconstitute(Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
         Guid createdBy, string? description, Guid? recreatedFromTaskId)
     {
         return new Task(
-            id, title, createdAt, status, createdBy, description, recreatedFromTaskId);
+            id, title, dueDate, createdAt, status, createdBy, description, recreatedFromTaskId);
     }
 }
