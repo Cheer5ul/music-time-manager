@@ -6,6 +6,7 @@ public static class TaskErrors
     {
         public const string InvalidTitle = "Task.InvalidTtile";
         public const string InvalidDescription = "Task.InvalidDescription";
+        public const string InvalidDueDate = "Task.InvalidDueDate";
     }    
     public static Error InvalidTitle(string title) =>
         new Error(Codes.InvalidTitle, 
@@ -13,4 +14,7 @@ public static class TaskErrors
     public static Error InvalidDescription(string description) => 
         new Error(Codes.InvalidDescription,
                 $"Description '{description}' is invalid.");
+    public static Error InvalidDueDate(DateTime dueDate) =>
+        new Error(Codes.InvalidDueDate,
+            $"DueDate '{dueDate}' is invalid.");
 }
