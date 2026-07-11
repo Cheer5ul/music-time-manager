@@ -10,7 +10,7 @@ public class Task
     public const int MAX_DESCRIPTION_LENGTH = 1000;
     private Task(
         Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
-        Guid createdBy, string? description, Guid? recreatedFromTaskId)
+        Guid createdBy, List<SubTask> subTasks, string? description, Guid? recreatedFromTaskId)
     {
         Id = id;
         Title = title;
@@ -20,6 +20,7 @@ public class Task
         Status = status;
         CreatedBy = createdBy;
         RecreatedFromTaskId = recreatedFromTaskId;
+        SubTasks = subTasks;
     }
     public Guid Id { get; private set; }
     public string Title { get; private set; }
@@ -29,9 +30,11 @@ public class Task
     public Status Status { get; private set; }
     public Guid CreatedBy { get; private set; }
     public Guid? RecreatedFromTaskId { get; private set; }
+    public ICollection<SubTask> SubTasks { get; private set; } 
 
     public ResultT<Task> Create(string title, DateTime dueDate,
-        Guid createdBy, string? description, Guid? recreatedFromTaskId)
+        Guid createdBy, List<SubTask> subtasks, 
+        string? description, Guid? recreatedFromTaskId)
     {
         List<Error> errors = [];
         
@@ -66,15 +69,16 @@ public class Task
             status: Status.ToDo,
             createdBy: createdBy,
             description: description,
-            recreatedFromTaskId: recreatedFromTaskId);
+            recreatedFromTaskId: recreatedFromTaskId,
+            subTasks: subtasks);
         
         return ResultT<Task>.Success(task);
     }
 
     public static Task Reconstitute(Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
-        Guid createdBy, string? description, Guid? recreatedFromTaskId)
+        Guid createdBy, List<SubTask> subTasks, string? description, Guid? recreatedFromTaskId)
     {
         return new Task(
-            id, title, dueDate, createdAt, status, createdBy, description, recreatedFromTaskId);
+            id, title, dueDate, createdAt, status, createdBy, subTasks, description, recreatedFromTaskId);
     }
 }
