@@ -48,7 +48,7 @@ public class Task
         }
 
         if (dueDate > DateTime.Now ||
-            DueDate - DateTime.Now > TimeSpan.FromDays(365))
+            dueDate - DateTime.Now > TimeSpan.FromDays(365))
         {
             errors.Add(TaskErrors.InvalidDueDate(dueDate));
         }
