@@ -3,7 +3,7 @@ using music_time_manager.Core.Result;
 
 namespace music_time_manager.Core.Models;
 
-public class SubTask 
+public class SubTask
 {
     private SubTask(Guid id, string title, Status status, Guid taskId)
     {
