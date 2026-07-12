@@ -10,7 +10,7 @@ public class Task
     public const int MAX_DESCRIPTION_LENGTH = 1000;
     private Task(
         Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
-        Guid createdBy, List<SubTask> subTasks, string? description, Guid? recreatedFromTaskId)
+        Guid createdBy, List<Subtask> subTasks, string? description, Guid? recreatedFromTaskId)
     {
         Id = id;
         Title = title;
@@ -30,10 +30,10 @@ public class Task
     public Status Status { get; private set; }
     public Guid CreatedBy { get; private set; }
     public Guid? RecreatedFromTaskId { get; private set; }
-    public ICollection<SubTask> SubTasks { get; private set; } 
+    public ICollection<Subtask> SubTasks { get; private set; } 
 
     public ResultT<Task> Create(string title, DateTime dueDate,
-        Guid createdBy, List<SubTask> subtasks, 
+        Guid createdBy, List<Subtask> subtasks, 
         string? description, Guid? recreatedFromTaskId)
     {
         List<Error> errors = [];
@@ -76,7 +76,7 @@ public class Task
     }
 
     public static Task Reconstitute(Guid id, string title, DateTime dueDate, DateTime createdAt, Status status,
-        Guid createdBy, List<SubTask> subTasks, string? description, Guid? recreatedFromTaskId)
+        Guid createdBy, List<Subtask> subTasks, string? description, Guid? recreatedFromTaskId)
     {
         return new Task(
             id, title, dueDate, createdAt, status, createdBy, subTasks, description, recreatedFromTaskId);
