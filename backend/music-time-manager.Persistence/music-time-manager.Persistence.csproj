@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configurations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\music-time-manager.Core\music-time-manager.Core.csproj" />
     </ItemGroup>
 
