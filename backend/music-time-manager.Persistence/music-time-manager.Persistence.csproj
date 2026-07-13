@@ -5,6 +5,7 @@
         <RootNamespace>music_time_manager.Persistence</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>65137aa5-b96b-4cd9-885a-488f3d7c0317</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
