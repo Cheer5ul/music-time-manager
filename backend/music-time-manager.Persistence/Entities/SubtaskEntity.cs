@@ -9,4 +9,5 @@ public class SubtaskEntity
     public Status Status { get; set; }
     public Guid TaskId { get; set; }
     public TaskEntity Task { get; set; }
+    public ICollection<SubtaskAssigneeEntity> SubtaskAssignees { get; set; } = new List<SubtaskAssigneeEntity>();
 }
