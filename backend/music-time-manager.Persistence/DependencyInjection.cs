@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace music_time_manager.Persistence;
 
-public class DependencyInjection
+public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services,
         IConfiguration configuration)
