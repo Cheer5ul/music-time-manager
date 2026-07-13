@@ -5,7 +5,7 @@ using music_time_manager.Persistence.Entities;
 
 namespace music_time_manager.Persistence.Configurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
+public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 {
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
