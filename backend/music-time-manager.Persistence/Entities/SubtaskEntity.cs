@@ -8,4 +8,5 @@ public class SubtaskEntity
     public string Title { get; set; }
     public Status Status { get; set; }
     public Guid TaskId { get; set; }
+    public TaskEntity Task { get; set; }
 }
