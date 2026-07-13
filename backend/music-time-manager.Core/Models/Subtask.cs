@@ -32,13 +32,13 @@ public class Subtask
             return ResultT<Subtask>.Failures(errors);
         }
 
-        var subTask = new Subtask(
+        var subtask = new Subtask(
             Guid.NewGuid(),
             title, 
             Models.Status.ToDo,
             taskId);
         
-        return ResultT<Subtask>.Success(subTask);
+        return ResultT<Subtask>.Success(subtask);
     }
 
     public static Subtask Reconstitute(Guid id, string title, Status status, Guid taskId)

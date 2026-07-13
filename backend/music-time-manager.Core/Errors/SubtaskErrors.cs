@@ -1,6 +1,6 @@
 ﻿namespace music_time_manager.Core.Errors;
 
-public static class SubTaskErrors 
+public static class SubtaskErrors 
 {
     private static class Codes
     {

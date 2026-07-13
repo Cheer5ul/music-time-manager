@@ -21,7 +21,7 @@ public class SubtaskEntityConfiguration : IEntityTypeConfiguration<SubtaskEntity
             .IsRequired();
 
         builder.HasOne(subtask => subtask.Task)
-            .WithMany(task => task.SubTasks)
+            .WithMany(task => task.SubtaskEntities)
             .HasForeignKey(subtask => subtask.TaskId)
             .OnDelete(DeleteBehavior.Cascade);
     }

@@ -2,10 +2,10 @@
 
 public class SubtaskAssignee
 {
-    public SubtaskAssignee(Guid id, Guid subTaskId, Guid userId)
+    public SubtaskAssignee(Guid id, Guid subtaskId, Guid userId)
     {
         Id = id;
-        SubtaskId = subTaskId;
+        SubtaskId = subtaskId;
         UserId = userId;
     }
     public Guid Id {get; private set;}

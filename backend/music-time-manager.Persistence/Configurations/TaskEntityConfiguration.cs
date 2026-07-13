@@ -40,6 +40,6 @@ public class TaskEntityConfiguration : IEntityTypeConfiguration<TaskEntity>
             .HasForeignKey(task => task.RecreatedFromTaskId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(task => task.SubTasks);
+        builder.Property(task => task.SubtaskEntities);
     }
 }

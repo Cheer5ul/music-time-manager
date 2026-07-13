@@ -14,6 +14,6 @@ public class TaskEntity
     public Guid? RecreatedFromTaskId { get; set; }
     public TaskEntity? RecreatedFromTask { get; set; }
     public ICollection<TaskEntity> RecreatedTasks { get; set; } = new List<TaskEntity>();
-    public ICollection<SubtaskEntity> SubTasks { get; set; } = new List<SubtaskEntity>();
+    public ICollection<SubtaskEntity> SubtaskEntities { get; set; } = new List<SubtaskEntity>();
     public ICollection<TaskAssigneeEntity> TaskAssignees { get; set; } = new List<TaskAssigneeEntity>();
 }
