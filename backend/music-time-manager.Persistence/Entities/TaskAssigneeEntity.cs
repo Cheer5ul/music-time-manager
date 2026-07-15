@@ -2,7 +2,6 @@
 
 public class TaskAssigneeEntity
 {
-    public Guid Id {get; set;}
     public Guid TaskId { get; set; }
     public TaskEntity Task { get; set; }
     public Guid UserId { get; set; }
