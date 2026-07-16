@@ -14,7 +14,7 @@ public class TaskRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Guid> CreateTask(Core.Models.Task task, List<TaskAssignee> taskAssignees, 
+    public async Task CreateTask(Core.Models.Task task, List<TaskAssignee> taskAssignees, 
         List<SubtaskAssignee> subtaskAssignees, CancellationToken ct = default)
     {
         var taskAssigneeEntities = taskAssignees.Select(
@@ -58,7 +58,6 @@ public class TaskRepository
         await _dbContext.Subtasks.AddRangeAsync(subtaskEntities, ct);
         await _dbContext.Tasks.AddAsync(taskEntity, ct);
         await _dbContext.SaveChangesAsync(ct);
-        return task.Id;
     }
 
     public async Task DeleteTask(Guid taskId, CancellationToken ct = default)
