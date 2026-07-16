@@ -1,67 +1,69 @@
-﻿// using music_time_manager.Core.Models;
-// using music_time_manager.Persistence.Entities;
-// using Task = music_time_manager.Core.Models.Task;
-//
-// namespace music_time_manager.Persistence.Repositories;
-//
-// public class TaskRepository
-// {
-//     private readonly MusicTimeManagerDbContext _dbContext;
-//     
-//     public TaskRepository(MusicTimeManagerDbContext dbContext)
-//     {
-//         _dbContext = dbContext;
-//     }
-//
-//     public async Task<Guid> CreateTask(Task task)
-//     {
-//         var taskAssigneeEntity = new SubtaskAssigneeEntity()
-//         {
-//             
-//         };
-//
-//         var subtaskAssigneeEntity = new SubtaskAssigneeEntity()
-//         {
-//             
-//         };
-//         
-//         var subtaskEntities = task.SubTasks
-//             .Select(st => new SubtaskEntity()
-//             {
-//                 Id = st.Id,
-//                 Title = st.Title,
-//                 Status = st.Status,
-//                 TaskId = st.TaskId
-//             })
-//             .ToList();
-//
-//         var taskEntity = new TaskEntity()
-//         {
-//             Id = task.Id,
-//             Title = task.Title,
-//             Description = task.Description,
-//             DueDate = task.DueDate,
-//             CreatedAt = task.CreatedAt,
-//             Status = task.Status,
-//             CreatedBy = task.CreatedBy,
-//             RecreatedFromTask = null,
-//             RecreatedFromTaskId = null,
-//             RecreatedTasks = [],
-//             SubtaskEntities = subtaskEntities,
-//             TaskAssignees = []
-//         };
-//         
-//         var taskAssigneeEntities = new List<TaskAssigneeEntity>();
-//
-//         foreach (var subtaskEntity in subtaskEntities)
-//         {
-//             taskAssigneeEntities.Add(new TaskAssigneeEntity()
-//             {
-//                 TaskId = taskEntity.Id,
-//                 UserId = taskEntity.
-//             });
-//         }
-//         
-//
-//     }
-// }
+﻿using Microsoft.EntityFrameworkCore;
+using music_time_manager.Core.Models;
+using music_time_manager.Persistence.Entities;
+using Task = System.Threading.Tasks.Task;
+
+namespace music_time_manager.Persistence.Repositories;
+
+public class TaskRepository
+{
+    private readonly MusicTimeManagerDbContext _dbContext;
+    
+    public TaskRepository(MusicTimeManagerDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<Guid> CreateTask(Core.Models.Task task, List<TaskAssignee> taskAssignees, 
+        List<SubtaskAssignee> subtaskAssignees, CancellationToken ct = default)
+    {
+        var taskAssigneeEntities = taskAssignees.Select(
+            ta => new TaskAssigneeEntity()
+            {
+                TaskId = ta.TaskId,
+                UserId = ta.UserId
+            }).ToList();
+
+        var subtaskAssigneeEntities = subtaskAssignees.Select(
+            sta => new SubtaskAssigneeEntity()
+            {
+                SubtaskId = sta.SubtaskId,
+                UserId = sta.UserId
+            }).ToList();
+        
+        var subtaskEntities = task.SubTasks
+            .Select(st => new SubtaskEntity()
+            {
+                Id = st.Id,
+                Title = st.Title,
+                Status = st.Status,
+                TaskId = st.TaskId
+            })
+            .ToList();
+        
+        var taskEntity = new TaskEntity()
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Description = task.Description,
+            DueDate = task.DueDate,
+            CreatedAt = task.CreatedAt,
+            Status = task.Status,
+            CreatedBy = task.CreatedBy,
+            SubtaskEntities = subtaskEntities
+        };
+
+        await _dbContext.TaskAssignees.AddRangeAsync(taskAssigneeEntities, ct);
+        await _dbContext.SubtaskAssignees.AddRangeAsync(subtaskAssigneeEntities, ct);
+        await _dbContext.Subtasks.AddRangeAsync(subtaskEntities, ct);
+        await _dbContext.Tasks.AddAsync(taskEntity, ct);
+        await _dbContext.SaveChangesAsync(ct);
+        return task.Id;
+    }
+
+    public async Task DeleteTask(Guid taskId, CancellationToken ct = default)
+    {
+        await _dbContext.Tasks.Where(te => te.Id == taskId)
+            .ExecuteDeleteAsync(ct);
+    }
+}
