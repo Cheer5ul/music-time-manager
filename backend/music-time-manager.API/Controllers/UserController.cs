@@ -32,17 +32,6 @@ public class UserController : ControllerBase
         
         return Ok(response);
     } 
-    
-    [HttpPost]
-    public async Task<ActionResult> Create([FromBody] CreateUserDto createUserDto,
-        CancellationToken ct)
-    {
-        var result = await _userService.Create(createUserDto, ct);
-        
-        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
-        
-        return Ok();
-    }
 
     [HttpDelete]
     public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
