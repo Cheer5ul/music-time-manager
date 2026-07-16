@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using music_time_manager.Persistence.Repositories;
 
 namespace music_time_manager.Persistence;
 
@@ -22,8 +23,9 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString(nameof(MusicTimeManagerDbContext)));
         });
 
-        // add services 
-        // services.AddScoped<>();
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITaskRepository, TaskRepository>();
         
         return services;
     }

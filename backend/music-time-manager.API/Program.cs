@@ -1,5 +1,6 @@
 using music_time_manager.Application.Services;
 using music_time_manager.Persistence;
+using SneakerStore.FailureHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddPersistence(builder.Configuration);
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
+
+// Handlers
+builder.Services.AddScoped<IFailureHandler, FailureHandler>();
 
 var app = builder.Build();
 
