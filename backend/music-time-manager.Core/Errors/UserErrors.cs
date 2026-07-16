@@ -5,8 +5,12 @@ public static class UserErrors
     private static class Codes
     {
         public const string InvalidUsername = "User.InvalidName";
+        public const string NotFound = "User.NotFound";
     }
     public static Error InvalidUsername(string username) => 
         new Error(Codes.InvalidUsername,
             $"Username '{username}' is invalid."); 
+    public static Error NotFound(string username) => 
+        new Error(Codes.NotFound,
+            $"User with username '{username}' is not found.");
 }
