@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\music-time-manager.Application\music-time-manager.Application.csproj" />
       <ProjectReference Include="..\music-time-manager.Persistence\music-time-manager.Persistence.csproj" />
     </ItemGroup>
 
