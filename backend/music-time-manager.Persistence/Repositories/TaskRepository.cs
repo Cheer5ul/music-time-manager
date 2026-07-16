@@ -5,7 +5,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace music_time_manager.Persistence.Repositories;
 
-public class TaskRepository
+public class TaskRepository : ITaskRepository
 {
     private readonly MusicTimeManagerDbContext _dbContext;
     
