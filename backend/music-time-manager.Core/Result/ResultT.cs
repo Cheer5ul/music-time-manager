@@ -4,12 +4,12 @@ namespace music_time_manager.Core.Result;
 
 public class ResultT<TValue> : Result
 {
-    private readonly TValue? _value;
+    public TValue? Value;
 
     private ResultT(TValue value) 
         : base(true, [])
     {
-        _value = value ?? throw new ArgumentNullException(nameof(value));
+        Value = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     private ResultT(List<Error> errors) : base(false, errors) { }
