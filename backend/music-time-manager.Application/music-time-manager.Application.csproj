@@ -7,4 +7,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\music-time-manager.Core\music-time-manager.Core.csproj" />
+    </ItemGroup>
+
 </Project>
