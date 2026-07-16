@@ -7,7 +7,7 @@ using SneakerStore.FailureHandler;
 namespace music_time_manager.API.Controllers;
 
 [ApiController]
-[Route("[users]")]
+[Route("users")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
