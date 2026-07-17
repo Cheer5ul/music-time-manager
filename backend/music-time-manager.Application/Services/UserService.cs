@@ -1,7 +1,7 @@
-﻿using music_time_manager.Application.DTOs;
-using music_time_manager.Core.Errors.User;
+﻿using music_time_manager.Core.Errors.User;
 using music_time_manager.Core.Models;
 using music_time_manager.Core.Result;
+using music_time_manager.Infrastructure;
 using music_time_manager.Persistence.Repositories;
 
 namespace music_time_manager.Application.Services;
@@ -9,21 +9,47 @@ namespace music_time_manager.Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtProvider _jwtProvider;
     
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
+        IJwtProvider jwtProvider)
     {
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+        _jwtProvider = jwtProvider;
     }
 
-    public async Task<Result> Create(CreateUserDto dto, CancellationToken ct = default)
+    public async Task<Result> Create(string username, string password, CancellationToken ct = default)
     {
-        var user = User.Create(dto.Name, dto.Password);
+        var passwordHash = _passwordHasher.Generate(password);
+        
+        var user = User.Create(username, passwordHash);
         
         if(user.IsFailure) return Result.Failures(user.Errors);
         
         await _userRepository.Create(user.Value!, ct);
 
         return Result.Success;
+    }
+
+    public async Task<ResultT<string>> Login(string username, string password, CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetByUsername(username, ct);
+        
+        if (user == null) return ResultT<string>.Failures([UserErrors.NotFound(username)]);
+        
+        var result = _passwordHasher.Verify(password, user.PasswordHash);
+
+        if (result == false)
+        {
+            return ResultT<string>.Failures([UserErrors.FailedToLogin()]);
+        }
+
+        var token = _jwtProvider.GenerateToken(user);
+        
+        return ResultT<string>.Success(token);
     }
 
     public async Task<ResultT<User>> GetByUsername(string username, CancellationToken ct = default)
