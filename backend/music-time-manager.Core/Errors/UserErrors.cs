@@ -6,6 +6,7 @@ public static class UserErrors
     {
         public const string InvalidUsername = "User.InvalidName";
         public const string NotFound = "User.NotFound";
+        public const string FailedToLogin = "User.FailedToLogin";
     }
     public static Error InvalidUsername(string username) => 
         new Error(Codes.InvalidUsername,
@@ -13,4 +14,7 @@ public static class UserErrors
     public static Error NotFound(string username) => 
         new Error(Codes.NotFound,
             $"User with username '{username}' is not found.");
+    public static Error FailedToLogin() => 
+        new Error(Codes.FailedToLogin,
+            $"Failed to login.");
 }
