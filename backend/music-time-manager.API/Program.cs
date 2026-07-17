@@ -1,8 +1,12 @@
 using music_time_manager.Application.Services;
+using music_time_manager.Infrastructure;
+using music_time_manager.Infrastructure.Options;
 using music_time_manager.Persistence;
 using SneakerStore.FailureHandler;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -16,6 +20,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 // Handlers
 builder.Services.AddScoped<IFailureHandler, FailureHandler>();
+
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 var app = builder.Build();
 
