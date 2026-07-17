@@ -20,10 +20,13 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("register")]
-    public async Task<ActionResult> Register([FromBody] CreateUserDto createUserDto,
+    public async Task<ActionResult> Register([FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken ct)
     {
-        var result = await _userService.Create(createUserDto, ct);
+        var result = await _userService.Create(
+            registerUserRequest.Name
+            , registerUserRequest.Password,
+            ct);
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
@@ -31,8 +34,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login()
+    public async Task<ActionResult<string>> Login([FromBody] LoginUserRequest loginUserRequest,
+        CancellationToken ct)
     {
-        return Ok();
+        var token = await _userService.Login(loginUserRequest.Username, loginUserRequest.Password, ct);
+        
+        return Ok(token.Value);
     }
 }
