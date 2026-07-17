@@ -5,10 +5,12 @@
         <RootNamespace>music_time_manager.Infrastructure</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>b7742e20-7bb4-4c01-ba18-f1ea2d0af7dc</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
     </ItemGroup>
 
     <ItemGroup>
