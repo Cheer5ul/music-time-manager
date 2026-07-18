@@ -21,14 +21,14 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<UserResponseDto>> GetByUsername(string username, 
+    public async Task<ActionResult<UserResponse>> GetByUsername(string username, 
         CancellationToken ct)
     {
         var result = await _userService.GetByUsername(username, ct);
         
         if (result.Value == null) return _failureHandler.HandleFailure(result, HttpContext);
         
-        var response = new UserResponseDto(result.Value.UserName);
+        var response = new UserResponse(result.Value.UserName);
         
         return Ok(response);
     } 
