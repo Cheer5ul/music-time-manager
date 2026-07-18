@@ -34,7 +34,7 @@ public class TaskController : ControllerBase
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
-        return Ok(result);
+        return Ok();
     }
 
     [HttpDelete("{id:guid}")]
