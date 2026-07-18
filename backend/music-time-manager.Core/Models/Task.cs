@@ -32,7 +32,7 @@ public class Task
     public Guid? RecreatedFromTaskId { get; private set; }
     public ICollection<Subtask> SubTasks { get; private set; } 
 
-    public ResultT<Task> Create(string title, DateTime dueDate,
+    public static ResultT<Task> Create(string title, DateTime dueDate,
         Guid createdBy, List<Subtask> subtasks, 
         string? description, Guid? recreatedFromTaskId)
     {
