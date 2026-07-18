@@ -17,7 +17,7 @@ public class Subtask
     public Status Status { get; private set; }
     public Guid TaskId { get; private set; }
 
-    public static ResultT<Subtask> Create(string title, Status status, Guid taskId)
+    public static ResultT<Subtask> Create(string title, Guid taskId)
     {
         List<Error> errors = [];
         
