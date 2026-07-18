@@ -12,7 +12,7 @@ public class TaskEntityConfiguration : IEntityTypeConfiguration<TaskEntity>
         builder.HasKey(task => task.Id);
 
         builder.Property(task => task.Title)
-            .HasMaxLength(Task.MIN_TITLE_LENGTH)
+            .HasMaxLength(Task.MAX_TITLE_LENGTH)
             .IsRequired();
         
         builder.Property(task => task.Description)
