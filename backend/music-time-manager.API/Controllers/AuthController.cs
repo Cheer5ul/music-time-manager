@@ -39,6 +39,9 @@ public class AuthController : ControllerBase
     {
         var token = await _userService.Login(loginUserRequest.Username, loginUserRequest.Password, ct);
         
-        return Ok(token.Value);
+        if(token.IsFailure) return _failureHandler.HandleFailure(token, HttpContext);
+        
+        var response = token.Value;
+        return Ok(response);
     }
 }
