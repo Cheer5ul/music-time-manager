@@ -50,7 +50,7 @@ public class Task
             errors.Add(TaskErrors.InvalidDescription(description));
         }
 
-        if (dueDate > DateTime.UtcNow ||
+        if (dueDate < DateTime.UtcNow ||
             dueDate - DateTime.UtcNow > TimeSpan.FromDays(365))
         {
             errors.Add(TaskErrors.InvalidDueDate(dueDate));
