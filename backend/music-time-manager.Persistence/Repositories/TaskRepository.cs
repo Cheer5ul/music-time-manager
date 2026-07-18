@@ -14,7 +14,25 @@ public class TaskRepository : ITaskRepository
         _dbContext = dbContext;
     }
 
-    public async Task CreateTask(Core.Models.Task task, List<TaskAssignee> taskAssignees, 
+    public async Task CreateTask(Core.Models.Task task, CancellationToken ct = default)
+    {
+        var taskEntity = new TaskEntity()
+        {
+            Id = task.Id,
+            Title = task.Title,
+            Description = task.Description,
+            DueDate = task.DueDate,
+            CreatedAt = task.CreatedAt,
+            CreatedBy = task.CreatedBy,
+            Status = task.Status,
+            RecreatedFromTaskId = null,
+            SubtaskEntities = new List<SubtaskEntity>()
+        };
+        
+        await _dbContext.Tasks.AddAsync(taskEntity, ct);
+        await _dbContext.SaveChangesAsync(ct);
+    }
+    public async Task CreateTaskWithAssignees(Guid taskId, List<TaskAssignee> taskAssignees, 
         List<SubtaskAssignee> subtaskAssignees, CancellationToken ct = default)
     {
         var taskAssigneeEntities = taskAssignees.Select(
@@ -30,34 +48,17 @@ public class TaskRepository : ITaskRepository
                 SubtaskId = sta.SubtaskId,
                 UserId = sta.UserId
             }).ToList();
-        
-        var subtaskEntities = task.SubTasks
-            .Select(st => new SubtaskEntity()
-            {
-                Id = st.Id,
-                Title = st.Title,
-                Status = st.Status,
-                TaskId = st.TaskId
-            })
-            .ToList();
-        
-        var taskEntity = new TaskEntity()
-        {
-            Id = task.Id,
-            Title = task.Title,
-            Description = task.Description,
-            DueDate = task.DueDate,
-            CreatedAt = task.CreatedAt,
-            Status = task.Status,
-            CreatedBy = task.CreatedBy,
-            SubtaskEntities = subtaskEntities
-        };
 
         await _dbContext.TaskAssignees.AddRangeAsync(taskAssigneeEntities, ct);
         await _dbContext.SubtaskAssignees.AddRangeAsync(subtaskAssigneeEntities, ct);
-        await _dbContext.Subtasks.AddRangeAsync(subtaskEntities, ct);
-        await _dbContext.Tasks.AddAsync(taskEntity, ct);
         await _dbContext.SaveChangesAsync(ct);
+    }
+
+    public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
+    {
+        var task =  await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId, ct);
+
+        return task != null;
     }
 
     public async Task DeleteTask(Guid taskId, CancellationToken ct = default)
