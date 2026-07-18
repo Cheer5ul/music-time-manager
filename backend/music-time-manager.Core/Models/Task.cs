@@ -50,8 +50,8 @@ public class Task
             errors.Add(TaskErrors.InvalidDescription(description));
         }
 
-        if (dueDate > DateTime.Now ||
-            dueDate - DateTime.Now > TimeSpan.FromDays(365))
+        if (dueDate > DateTime.UtcNow ||
+            dueDate - DateTime.UtcNow > TimeSpan.FromDays(365))
         {
             errors.Add(TaskErrors.InvalidDueDate(dueDate));
         }
@@ -65,7 +65,7 @@ public class Task
             id: Guid.NewGuid(),
             title: title,
             dueDate: dueDate,
-            createdAt: DateTime.Now,
+            createdAt: DateTime.UtcNow,
             status: Status.ToDo,
             createdBy: createdBy,
             description: description,
