@@ -17,6 +17,7 @@ builder.Services.AddPersistence(builder.Configuration);
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 // Handlers
 builder.Services.AddScoped<IFailureHandler, FailureHandler>();
