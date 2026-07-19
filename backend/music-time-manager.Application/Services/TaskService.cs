@@ -51,6 +51,24 @@ public class TaskService : ITaskService
         return Result.Success;
     }
 
+    public async Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default)
+    {
+        if (userIds.Count == 0)
+        {
+            return Result.Failures([TaskErrors.MustHaveAtLeastOneAssignee()]);
+        }
+        
+        var doesTaskExist = await _taskRepository.DoesTaskExist(subtaskId, ct);
+        if (!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(subtaskId)]);
+        
+        var assignees = userIds.
+            Select(userId => SubtaskAssignee.Reconstitute(subtaskId, userId))
+            .ToList();
+            
+        await _taskRepository.ReplaceSubtaskAssignees(subtaskId, assignees, ct);
+        return Result.Success;
+    }
+
 
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
