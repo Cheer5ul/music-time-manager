@@ -14,6 +14,45 @@ public class TaskRepository : ITaskRepository
         _dbContext = dbContext;
     }
 
+    public async Task<List<Core.Models.Task>> GetTasks(CancellationToken ct = default)
+    {
+        var taskEntities = await _dbContext.Tasks
+            .AsNoTracking()
+            .ToListAsync(ct);
+
+        var tasks = taskEntities
+            .Select(te => Core.Models.Task.Reconstitute(
+                te.Id,
+                te.Title,
+                te.DueDate,
+                te.CreatedAt,
+                te.Status,
+                te.CreatedBy,
+                new List<Subtask>(),
+                te.Description,
+                te.RecreatedFromTaskId))
+            .ToList();
+        
+        return tasks;
+    }
+
+    public async Task<List<Subtask>> GetSubTasks(CancellationToken ct = default)
+    {
+        var subtaskEntities = await _dbContext.Subtasks
+            .AsNoTracking()
+            .ToListAsync(ct);
+        
+        var subtasks = subtaskEntities
+            .Select(se => Core.Models.Subtask.Reconstitute(
+                se.Id,
+                se.Title,
+                se.Status,
+                se.TaskId))
+            .ToList();
+
+        return subtasks;
+    }
+
     public async Task CreateTask(Core.Models.Task task, CancellationToken ct = default)
     {
         var taskEntity = new TaskEntity()

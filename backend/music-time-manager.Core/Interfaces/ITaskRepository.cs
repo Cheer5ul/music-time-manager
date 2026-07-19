@@ -5,6 +5,8 @@ namespace music_time_manager.Persistence.Repositories;
 
 public interface ITaskRepository
 {
+    Task<List<Core.Models.Task>> GetTasks(CancellationToken ct = default);
+    Task<List<Core.Models.Subtask>> GetSubTasks(CancellationToken ct = default);
     Task CreateTask(Core.Models.Task task, CancellationToken ct = default);
 
     Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default);
