@@ -171,6 +171,15 @@ public record TaskResponse(
     IReadOnlyList<SubtaskResponse> Subtasks
 );
 
+public record SubtaskResponse(
+    Guid Id,
+    string Title,
+    TaskStatus Status,          // ToDo | InProgress | Done
+    bool IsOverdue,               // computed по dueDate родительской Task — требует join, не берётся из SubtaskEntity напрямую
+    Guid TaskId,
+    IReadOnlyList<UserSummary> Assignees
+);
+
 public record TaskCreateRequest(
     [Required, MaxLength(200)] string Title,
     [MaxLength(2000)] string? Description,
