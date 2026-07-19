@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure;
 using music_time_manager.Infrastructure.Options;
@@ -7,6 +8,12 @@ using SneakerStore.FailureHandler;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
