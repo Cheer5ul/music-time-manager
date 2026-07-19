@@ -1,5 +1,5 @@
-﻿namespace music_time_manager.API.DTOs;
-using CoreStatus = music_time_manager.Core.Models.Status;
+﻿using CoreStatus = music_time_manager.Core.Models.Status;
+namespace music_time_manager.API.DTOs;
 
 public record TaskResponse(
     Guid Id,
