@@ -8,6 +8,7 @@ public static class TaskErrors
         public const string InvalidDescription = "Task.InvalidDescription";
         public const string InvalidDueDate = "Task.InvalidDueDate";
         public const string DoesNotExist = "Task.DoesNotExist";
+        public const string MustHaveAtLeastOneAssignee = "Task.MustHaveAtLeastOneAssignee";
     }    
     public static Error InvalidTitle(string title) =>
         new Error(Codes.InvalidTitle, 
@@ -22,4 +23,7 @@ public static class TaskErrors
     public static Error DoesNotExist(Guid id) =>
         new Error(Codes.DoesNotExist,
             $"Task with id {id} does not exist.");
+    public static Error MustHaveAtLeastOneAssignee() =>
+        new Error(Codes.MustHaveAtLeastOneAssignee,
+            $"Task must have at least one assignee.");
 }
