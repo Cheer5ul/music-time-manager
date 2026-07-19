@@ -8,10 +8,6 @@ public interface ITaskService
 {
     Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default);
-    Task<Result> CreateTaskWithAssignees(Task task, List<Guid> taskAssignedUsersIds,
-        List<Guid> subtaskAssignedUsersIds,
-        CancellationToken ct = default);
-
-    Task<Result> Delete(Guid taskId,
-        CancellationToken ct = default);
+    Task<Result> AssignUsersToTask(Guid taskId, List<Guid> userIds, CancellationToken ct = default);
+    Task<Result> Delete(Guid taskId, CancellationToken ct = default);
 }

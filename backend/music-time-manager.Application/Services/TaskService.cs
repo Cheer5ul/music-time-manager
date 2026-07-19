@@ -32,36 +32,25 @@ public class TaskService : ITaskService
         await  _taskRepository.CreateTask(task.Value!, ct);
         return Result.Success;
     }
-    
-    public async Task<Result> CreateTaskWithAssignees(Task task, List<Guid> taskAssignedUsersIds, 
-        List<Guid> subtaskAssignedUsersIds,
-        CancellationToken ct = default)
+
+    public async Task<Result> AssignUsersToTask(Guid taskId, List<Guid> userIds, CancellationToken ct = default)
     {
-        // task assignees
-        List<TaskAssignee> taskAssignees = [];
-
-        foreach (var assigneeId in taskAssignedUsersIds)
+        if (userIds.Count == 0)
         {
-            taskAssignees.Add(
-                TaskAssignee.Reconstitute(task.Id, assigneeId));
+            return Result.Failures([TaskErrors.MustHaveAtLeastOneAssignee()]);
         }
         
-        // subtask assignees
-        List<SubtaskAssignee> subtaskAssignees = [];
+        var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
+        if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
 
-        foreach (var assigneeId in subtaskAssignedUsersIds)
-        {
-            foreach (var subtask in task.SubTasks)
-            {
-                subtaskAssignees.Add(
-                    SubtaskAssignee.Reconstitute(subtask.TaskId, assigneeId));
-            }
-        }
-        
-        await _taskRepository.CreateTaskWithAssignees(task.Id, taskAssignees, subtaskAssignees, ct);
-        
-        return Result.Success; 
+        var assignees = userIds
+            .Select(userId => TaskAssignee.Reconstitute(taskId, userId))
+            .ToList();
+
+        await _taskRepository.ReplaceTaskAssignees(taskId, assignees, ct);
+        return Result.Success;
     }
+
 
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
