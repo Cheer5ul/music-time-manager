@@ -37,6 +37,15 @@ public class TaskController : ControllerBase
         return Ok();
     }
 
+    [HttpPut("{id:guid}/assignees")]
+    public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
+        CancellationToken ct = default)
+    {
+        var result = await _taskService.AssignUsersToTask(id, request.UserIds, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        return Ok();
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteTask(Guid id, CancellationToken ct = default)
     {
