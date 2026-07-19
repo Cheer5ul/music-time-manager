@@ -32,27 +32,23 @@ public class TaskRepository : ITaskRepository
         await _dbContext.Tasks.AddAsync(taskEntity, ct);
         await _dbContext.SaveChangesAsync(ct);
     }
-    public async Task CreateTaskWithAssignees(Guid taskId, List<TaskAssignee> taskAssignees, 
-        List<SubtaskAssignee> subtaskAssignees, CancellationToken ct = default)
+
+    public async Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default)
     {
-        var taskAssigneeEntities = taskAssignees.Select(
-            ta => new TaskAssigneeEntity()
-            {
-                TaskId = ta.TaskId,
-                UserId = ta.UserId
-            }).ToList();
+        await _dbContext.TaskAssignees
+            .Where(ta => ta.TaskId == taskId)
+            .ExecuteDeleteAsync(ct);
 
-        var subtaskAssigneeEntities = subtaskAssignees.Select(
-            sta => new SubtaskAssigneeEntity()
-            {
-                SubtaskId = sta.SubtaskId,
-                UserId = sta.UserId
-            }).ToList();
-
-        await _dbContext.TaskAssignees.AddRangeAsync(taskAssigneeEntities, ct);
-        await _dbContext.SubtaskAssignees.AddRangeAsync(subtaskAssigneeEntities, ct);
+        var entities = assignees.Select(a => new TaskAssigneeEntity()
+        {
+            TaskId = taskId,
+            UserId = a.UserId,
+        });
+        
+        await _dbContext.TaskAssignees.AddRangeAsync(entities, ct);
         await _dbContext.SaveChangesAsync(ct);
     }
+
 
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
     {
