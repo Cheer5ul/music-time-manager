@@ -8,6 +8,7 @@ public interface ITaskRepository
     Task CreateTask(Core.Models.Task task, CancellationToken ct = default);
 
     Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default);
+    Task ReplaceSubtaskAssignees(Guid subtaskId, List<SubtaskAssignee> assignees, CancellationToken ct = default);
 
     Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default);
     

@@ -49,6 +49,22 @@ public class TaskRepository : ITaskRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
+    public async Task ReplaceSubtaskAssignees(Guid subtaskId, List<SubtaskAssignee> assignees, CancellationToken ct = default)
+    {
+        await _dbContext.SubtaskAssignees
+            .Where(ta => ta.SubtaskId == subtaskId)
+            .ExecuteDeleteAsync(ct);
+
+        var entities = assignees.Select(a => new SubtaskAssigneeEntity()
+        {
+            SubtaskId = subtaskId,
+            UserId = a.UserId,
+        });
+        
+        await _dbContext.SubtaskAssignees.AddRangeAsync(entities, ct);
+        await _dbContext.SaveChangesAsync(ct);
+    }
+
 
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
     {
