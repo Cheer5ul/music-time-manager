@@ -21,7 +21,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct = default)
+    public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct)
     {
         var result = await _taskService.GetTasks(ct);
         
@@ -46,14 +46,14 @@ public class TaskController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateTask(
         [FromBody] TaskRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct)
     {
         var result = await _taskService.CreateTask(
             request.Title,
             request.DueDate,
             request.CreatedBy,
             request.Description, 
-            cancellationToken);
+            ct);
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
@@ -62,7 +62,7 @@ public class TaskController : ControllerBase
 
     [HttpPut("{id:guid}/assignees")]
     public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
-        CancellationToken ct = default)
+        CancellationToken ct)
     {
         var result = await _taskService.AssignUsersToTask(id, request.UserIds, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
@@ -70,7 +70,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult> DeleteTask(Guid id, CancellationToken ct = default)
+    public async Task<ActionResult> DeleteTask(Guid id, CancellationToken ct)
     {
         var result = await _taskService.Delete(id, ct);
         
