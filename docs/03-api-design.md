@@ -112,8 +112,11 @@
 ?createdBy={guid}
 ?dueBefore={date}
 ?dueAfter={date}
+?hasAssignees=true|false  // удобный фильтр найти "недооформленные" задачи без единого исполнителя
 ```
 Комбинируются через `&`, все опциональны.
+
+> ⚠️ **Изменение инварианта:** `POST /tasks` больше не требует `assigneeIds` — задача создаётся первым шагом без исполнителей, они добавляются сразу после через `PUT /tasks/{id}/assignees` (тот эндпоинт по-прежнему требует `MinLength(1)` — опустошить список после того, как он стал непустым, нельзя). Причина: `TaskAssignee` требует уже существующий `TaskId`, поэтому создание задачи и назначение исполнителей физически не могут быть одним атомарным запросом без сущностного "создать всё сразу" эндпоинта, от которого сознательно отказались. Задача с пустым `assignees[]` — валидное промежуточное состояние, не ошибка; фронт определяет это по `assignees.length === 0` в уже существующем поле ответа, без отдельного флага в БД.
 
 ### 4.4 `POST /tasks/{id}/recreate`
 
@@ -143,6 +146,8 @@ Response: `201 Created`, тело — новая задача с `recreatedFromT
 | PUT | `/subtasks/{id}/assignees` | ✅ | Замена набора, 422 если пусто |
 | DELETE | `/subtasks/{id}` | ✅ | |
 
+Как и `Task`, `Subtask` создаётся без исполнителей (`POST /tasks/{taskId}/subtasks` не требует `assigneeIds`) — та же причина: `SubtaskId` должен существовать до того, как создаются записи в `Subtask_Assignee`. Исполнители добавляются сразу после через `PUT /subtasks/{id}/assignees`.
+
 `isOverdue` для Subtask вычисляется по `dueDate` **родительской Task** — у Subtask своего `dueDate` нет (см. `02-database-design.md`). При запросе `GET /subtasks` сервер обязан джойнить `Task` для вычисления этого флага.
 
 Право редактирования — `[Auth]`, без ограничения по создателю (снято для всего проекта).
@@ -169,8 +174,14 @@ public record TaskResponse(
 public record TaskCreateRequest(
     [Required, MaxLength(200)] string Title,
     [MaxLength(2000)] string? Description,
-    [Required] DateTime DueDate,
-    [Required, MinLength(1)] List<Guid> AssigneeIds
+    [Required] DateTime DueDate
+    // AssigneeIds сознательно отсутствует — задача создаётся без исполнителей,
+    // они добавляются отдельным вызовом PUT /tasks/{id}/assignees сразу после
+);
+
+public record SubtaskCreateRequest(
+    [Required, MaxLength(200)] string Title
+    // аналогично Task — без AssigneeIds, добавляются через PUT /subtasks/{id}/assignees
 );
 
 public record TaskRecreateRequest(
