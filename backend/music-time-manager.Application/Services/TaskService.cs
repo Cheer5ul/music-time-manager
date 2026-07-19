@@ -16,6 +16,20 @@ public class TaskService : ITaskService
         _taskRepository = repository;
     }
 
+    public async Task<ResultT<List<Task>>> GetTasks(CancellationToken ct = default)
+    {
+        var tasks = await _taskRepository.GetTasks(ct);
+
+        return ResultT<List<Task>>.Success(tasks);
+    }
+
+    public async Task<ResultT<List<Subtask>>> GetSubTasks(CancellationToken ct = default)
+    {
+        var subtasks = await _taskRepository.GetSubTasks(ct);
+        
+        return ResultT<List<Subtask>>.Success(subtasks);
+    }
+
     public async Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default)
     {
