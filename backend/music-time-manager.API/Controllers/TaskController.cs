@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
-using music_time_manager.Core.Models;
 using SneakerStore.FailureHandler;
-using Task = music_time_manager.Core.Models.Task;
+using CoreStatus = music_time_manager.Core.Models.Status;
 
 namespace music_time_manager.API.Controllers;
 
@@ -18,6 +18,29 @@ public class TaskController : ControllerBase
     {
         _taskService = taskService;
         _failureHandler = failureHandler;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct = default)
+    {
+        var result = await _taskService.GetTasks(ct);
+        
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+
+        var response = result.Value!
+            .Select(t => new TaskResponse(
+                Id: t.Id,
+                Title: t.Title,
+                Description: t.Description,
+                DueDate: t.DueDate,
+                CreatedBy: t.CreatedBy,
+                CreatedAt: t.CreatedAt,
+                Status: t.Status,
+                IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
+                RecreatedFromTaskId: t.RecreatedFromTaskId))
+            .ToList();
+        
+        return Ok(response);
     }
     
     [HttpPost]
