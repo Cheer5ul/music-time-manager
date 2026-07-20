@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
-using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 using music_time_manager.Core.Models;
 using SneakerStore.FailureHandler;
@@ -11,20 +10,20 @@ namespace music_time_manager.API.Controllers;
 [Route("subtasks")]
 public class SubtaskController : ControllerBase
 {
-    private readonly ITaskService _taskService;
+    private readonly ISubtaskService _subtaskService;
     private readonly IFailureHandler _failureHandler;
     
-    public SubtaskController(ITaskService taskService, 
+    public SubtaskController(ISubtaskService subtaskService, 
         IFailureHandler failureHandler)
     {
-        _taskService = taskService;
+        _subtaskService = subtaskService;
         _failureHandler = failureHandler;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Subtask>>> GetSubtasks(CancellationToken ct)
     {
-        var subtasks = await _taskService.GetSubTasks(ct);
+        var subtasks = await _subtaskService.GetSubTasks(ct);
         
         if(subtasks.IsFailure) return _failureHandler.HandleFailure(subtasks, HttpContext);
 
