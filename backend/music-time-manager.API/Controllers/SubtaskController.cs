@@ -48,5 +48,15 @@ public class SubtaskController : ControllerBase
         
         return Ok();
     }
-    
+
+    [HttpPost("/tasks/{taskId:guid}/subtasks")]
+    public async Task<ActionResult> CreateSubtask(Guid taskId, [FromBody] CreateSubtaskRequest subtaskRequest,
+        CancellationToken ct)
+    {
+        var result = await _subtaskService.CreateSubtask(taskId, subtaskRequest.Title, ct);
+        
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
 }
