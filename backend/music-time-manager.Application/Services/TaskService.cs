@@ -23,13 +23,6 @@ public class TaskService : ITaskService
         return ResultT<List<Task>>.Success(tasks);
     }
 
-    public async Task<ResultT<List<Subtask>>> GetSubTasks(CancellationToken ct = default)
-    {
-        var subtasks = await _taskRepository.GetSubTasks(ct);
-        
-        return ResultT<List<Subtask>>.Success(subtasks);
-    }
-
     public async Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default)
     {
@@ -64,26 +57,7 @@ public class TaskService : ITaskService
         await _taskRepository.ReplaceTaskAssignees(taskId, assignees, ct);
         return Result.Success;
     }
-
-    public async Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default)
-    {
-        if (userIds.Count == 0)
-        {
-            return Result.Failures([TaskErrors.MustHaveAtLeastOneAssignee()]);
-        }
-        
-        var doesTaskExist = await _taskRepository.DoesTaskExist(subtaskId, ct);
-        if (!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(subtaskId)]);
-        
-        var assignees = userIds.
-            Select(userId => SubtaskAssignee.Reconstitute(subtaskId, userId))
-            .ToList();
-            
-        await _taskRepository.ReplaceSubtaskAssignees(subtaskId, assignees, ct);
-        return Result.Success;
-    }
-
-
+    
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
     {
