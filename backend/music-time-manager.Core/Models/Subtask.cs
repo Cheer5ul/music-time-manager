@@ -46,7 +46,7 @@ public class Subtask
         return new Subtask(id, title, status, taskId);
     }
 
-    public Result.Result CreateTitle(string title)
+    public Result.Result UpdateTitle(string title)
     {
         if (string.IsNullOrWhiteSpace(title) || title.Length > Task.MAX_TITLE_LENGTH ||
             title.Length < Task.MIN_TITLE_LENGTH)
