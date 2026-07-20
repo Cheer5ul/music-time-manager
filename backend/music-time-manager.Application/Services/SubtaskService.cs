@@ -28,7 +28,7 @@ public class SubtaskService : ISubtaskService
             return Result.Failures([SubtaskErrors.MustHaveAtLeastOneAssignee()]);
         }
         
-        var doesTaskExist = await _taskRepository.DoesTaskExist(subtaskId, ct);
+        var doesTaskExist = await _taskRepository.DoesSubtaskExist(subtaskId, ct);
         if (!doesTaskExist) return Result.Failures([SubtaskErrors.DoesNotExist(subtaskId)]);
         
         var assignees = userIds.

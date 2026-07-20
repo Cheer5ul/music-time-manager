@@ -13,6 +13,7 @@ public interface ITaskRepository
     Task ReplaceSubtaskAssignees(Guid subtaskId, List<SubtaskAssignee> assignees, CancellationToken ct = default);
 
     Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default);
+    Task<bool> DoesSubtaskExist(Guid subtaskId, CancellationToken ct = default);
     
     Task DeleteTask(Guid taskId, CancellationToken ct = default);
 }

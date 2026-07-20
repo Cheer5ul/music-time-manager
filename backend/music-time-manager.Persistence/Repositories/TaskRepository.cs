@@ -112,6 +112,15 @@ public class TaskRepository : ITaskRepository
         return task != null;
     }
 
+    public async Task<bool> DoesSubtaskExist(Guid subtaskId, CancellationToken ct = default)
+    {
+        var subtask = await _dbContext.Subtasks.FirstOrDefaultAsync(s => s.Id == subtaskId, ct);
+        
+        return subtask != null;
+        
+        // Or return await _dbContext.Subtasks.AnyAsync(s => s.Id == subtaskId, ct);
+    }
+
     public async Task DeleteTask(Guid taskId, CancellationToken ct = default)
     {
         await _dbContext.Tasks.Where(te => te.Id == taskId)
