@@ -106,8 +106,6 @@ public class TaskRepository : ITaskRepository
 
     public async Task CreateSubtask(Guid taskId, Subtask subtask, CancellationToken ct = default)
     {
-        var taskEntity = await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId, ct);
-
         var subtaskEntity = new SubtaskEntity()
         {
             Title = subtask.Title,
@@ -116,8 +114,7 @@ public class TaskRepository : ITaskRepository
             TaskId = taskId,
         };
         
-       taskEntity!.SubtaskEntities.Add(subtaskEntity);
-        
+        await _dbContext.Subtasks.AddAsync(subtaskEntity, ct);
         await _dbContext.SaveChangesAsync(ct);
     }
 
