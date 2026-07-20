@@ -24,7 +24,7 @@ public class Subtask
         if (string.IsNullOrWhiteSpace(title) || title.Length > Task.MAX_TITLE_LENGTH ||
             title.Length < Task.MIN_TITLE_LENGTH)
         {
-            errors.Add(TaskErrors.InvalidTitle(title));
+            errors.Add(SubtaskErrors.InvalidTitle(title));
         }
 
         if (errors.Count > 0)
@@ -44,5 +44,18 @@ public class Subtask
     public static Subtask Reconstitute(Guid id, string title, Status status, Guid taskId)
     {
         return new Subtask(id, title, status, taskId);
+    }
+
+    public Result.Result CreateTitle(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title) || title.Length > Task.MAX_TITLE_LENGTH ||
+            title.Length < Task.MIN_TITLE_LENGTH)
+        {
+            return Result.Result.Failures([SubtaskErrors.InvalidTitle(title)]);
+        }
+        
+        Title =  title;
+        
+        return Result.Result.Success;
     }
 }
