@@ -11,6 +11,7 @@ public interface ITaskRepository
 
     Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default);
     Task ReplaceSubtaskAssignees(Guid subtaskId, List<SubtaskAssignee> assignees, CancellationToken ct = default);
+    Task CreateSubtask(Guid taskId, Subtask subtask, CancellationToken ct = default);
 
     Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default);
     Task<bool> DoesSubtaskExist(Guid subtaskId, CancellationToken ct = default);

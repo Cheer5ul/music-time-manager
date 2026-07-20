@@ -104,6 +104,22 @@ public class TaskRepository : ITaskRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
+    public async Task CreateSubtask(Guid taskId, Subtask subtask, CancellationToken ct = default)
+    {
+        var taskEntity = await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId, ct);
+
+        var subtaskEntity = new SubtaskEntity()
+        {
+            Title = subtask.Title,
+            Id = subtask.Id,
+            Status = subtask.Status,
+            TaskId = taskId,
+        };
+        
+       taskEntity!.SubtaskEntities.Add(subtaskEntity);
+        
+        await _dbContext.SaveChangesAsync(ct);
+    }
 
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
     {
