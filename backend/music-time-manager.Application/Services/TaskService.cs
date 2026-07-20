@@ -26,6 +26,8 @@ public class TaskService : ITaskService
     public async Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default)
     {
+        // TODO: if created by id does not exits -> error
+        
         var task = Task.Create(
             title,
             dueDate,
