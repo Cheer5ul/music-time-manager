@@ -66,6 +66,7 @@ public class TaskController : ControllerBase
     {
         var result = await _taskService.AssignUsersToTask(id, request.UserIds, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
         return Ok();
     }
 

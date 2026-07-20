@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
+using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 using music_time_manager.Core.Models;
 using SneakerStore.FailureHandler;
@@ -37,4 +38,15 @@ public class SubtaskController : ControllerBase
         
         return Ok(response);
     }
+    
+    [HttpPost("{id:guid}/assignees")]
+    public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
+        CancellationToken ct)
+    {
+        var result = await _subtaskService.AssignUsersToSubtask(id, request.UserIds, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+    
 }
