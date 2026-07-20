@@ -22,7 +22,7 @@ public class SubtaskController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Subtask>>> GetSubtasks(CancellationToken ct)
+    public async Task<ActionResult<List<SubtaskResponse>>> GetSubtasks(CancellationToken ct)
     {
         var subtasks = await _subtaskService.GetSubTasks(ct);
         
