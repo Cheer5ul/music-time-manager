@@ -38,4 +38,17 @@ public class SubtaskService : ISubtaskService
         await _taskRepository.ReplaceSubtaskAssignees(subtaskId, assignees, ct);
         return Result.Success;
     }
+
+    public async Task<Result> CreateSubtask(Guid taskId, string subtaskTitle, CancellationToken ct = default)
+    {
+        var doesSubtaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
+        if(!doesSubtaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
+        
+        var subtask = Subtask.Create(subtaskTitle, taskId);
+        
+        if(subtask.IsFailure) return Result.Failures(subtask.Errors);
+        
+        await _taskRepository.CreateSubtask(taskId, subtask.Value!, ct);
+        return Result.Success;
+    }
 }
