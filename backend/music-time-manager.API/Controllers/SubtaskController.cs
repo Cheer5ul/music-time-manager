@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
@@ -21,6 +22,7 @@ public class SubtaskController : ControllerBase
         _failureHandler = failureHandler;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<SubtaskResponse>>> GetSubtasks(CancellationToken ct)
     {
@@ -39,6 +41,7 @@ public class SubtaskController : ControllerBase
         return Ok(response);
     }
     
+    [Authorize]
     [HttpPost("{id:guid}/assignees")]
     public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
         CancellationToken ct)
@@ -48,7 +51,8 @@ public class SubtaskController : ControllerBase
         
         return Ok();
     }
-
+    
+    [Authorize]
     [HttpPost("/tasks/{taskId:guid}/subtasks")]
     public async Task<ActionResult> CreateSubtask(Guid taskId, [FromBody] CreateSubtaskRequest subtaskRequest,
         CancellationToken ct)

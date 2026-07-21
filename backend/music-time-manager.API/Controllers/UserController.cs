@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
@@ -20,6 +21,7 @@ public class UserController : ControllerBase
         _failureHandler = failureHandler;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<UserResponse>> GetByUsername(string username, 
         CancellationToken ct)
@@ -33,6 +35,7 @@ public class UserController : ControllerBase
         return Ok(response);
     } 
 
+    [Authorize]
     [HttpDelete]
     public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
     {
