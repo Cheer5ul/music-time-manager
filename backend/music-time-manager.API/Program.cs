@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
+using music_time_manager;
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure;
 using music_time_manager.Infrastructure.Options;
 using music_time_manager.Persistence;
-using SneakerStore.FailureHandler;
+using music_time_manager.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddControllers()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddApiAuthentication(builder.Configuration);
 
 // Connecting db
 builder.Services.AddPersistence(builder.Configuration);
