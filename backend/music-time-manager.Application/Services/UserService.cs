@@ -23,6 +23,9 @@ public class UserService : IUserService
 
     public async Task<Result> Create(string username, string password, CancellationToken ct = default)
     {
+        var isNameUsed = await _userRepository.GetByUsername(username, ct);
+        if (isNameUsed != null) return Result.Failures([UserErrors.NameAlreadyUsed(username)]);
+        
         var passwordHash = _passwordHasher.Generate(password);
         
         var user = User.Create(username, passwordHash);
