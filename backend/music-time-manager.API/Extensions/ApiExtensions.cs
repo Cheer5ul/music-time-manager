@@ -9,10 +9,14 @@ namespace music_time_manager.API.Extensions;
 public static class ApiExtensions
 {
     public static void AddApiAuthentication(
-        IServiceCollection services,
-        IConfiguration configuration,
-        IOptions<JwtOptions> jwtOptions)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        var jwtOptions = configuration
+                             .GetSection(nameof(JwtOptions))
+                             .Get<JwtOptions>()
+                         ?? throw new ArgumentException("JWT options are not configured");
+        
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
@@ -23,7 +27,7 @@ public static class ApiExtensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey)),
+                        Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
                 };
             });
 
