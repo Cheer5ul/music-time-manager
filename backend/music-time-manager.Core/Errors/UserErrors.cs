@@ -7,6 +7,7 @@ public static class UserErrors
         public const string InvalidUsername = "User.InvalidName";
         public const string NotFound = "User.NotFound";
         public const string FailedToLogin = "User.FailedToLogin";
+        public const string NameAlreadyUsed = "User.NameAlreadyUsed";
     }
     public static Error InvalidUsername(string username) => 
         new Error(Codes.InvalidUsername,
@@ -17,4 +18,7 @@ public static class UserErrors
     public static Error FailedToLogin() => 
         new Error(Codes.FailedToLogin,
             $"Failed to login.");
+    public static Error NameAlreadyUsed(string name) =>
+        new Error(Codes.NameAlreadyUsed,
+            $"User with name '{name}' already exists.");
 }
