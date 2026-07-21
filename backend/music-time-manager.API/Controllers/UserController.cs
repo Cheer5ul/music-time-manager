@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
-using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
-using SneakerStore.FailureHandler;
 
 namespace music_time_manager.API.Controllers;
 

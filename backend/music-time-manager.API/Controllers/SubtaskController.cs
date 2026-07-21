@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
-using music_time_manager.Core.Models;
-using SneakerStore.FailureHandler;
 
 namespace music_time_manager.API.Controllers;
 

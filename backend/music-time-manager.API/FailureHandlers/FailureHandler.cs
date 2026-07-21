@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using music_time_manager.Core.Errors;
 using music_time_manager.Core.Result;
 
-namespace SneakerStore.FailureHandler;
+namespace music_time_manager;
 
 public class FailureHandler : IFailureHandler
 {
