@@ -36,11 +36,20 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<string>> Login([FromBody] LoginUserRequest loginUserRequest,
         CancellationToken ct)
     {
-        var token = await _userService.Login(loginUserRequest.Username, loginUserRequest.Password, ct);
+        var result = await _userService.Login(loginUserRequest.Username, loginUserRequest.Password, ct);
         
-        if(token.IsFailure) return _failureHandler.HandleFailure(token, HttpContext);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
-        var response = token.Value;
-        return Ok(response);
+        var token = result.Value!;
+        
+        HttpContext.Response.Cookies.Append("access_token", token, new CookieOptions()
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddDays(7)
+        }); 
+        
+        return Ok();
     }
 }
