@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 
@@ -19,6 +20,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult> Register([FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken ct)
     {
@@ -33,6 +35,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<string>> Login([FromBody] LoginUserRequest loginUserRequest,
         CancellationToken ct)
     {
