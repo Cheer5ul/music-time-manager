@@ -55,4 +55,12 @@ public class AuthController : ControllerBase
         
         return Ok();
     }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public ActionResult Logout(CancellationToken ct)
+    {
+        HttpContext.Response.Cookies.Delete("access_token");
+        return Ok();
+    }
 }
