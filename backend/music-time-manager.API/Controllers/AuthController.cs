@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
+using music_time_manager.Infrastructure.Options;
 
 namespace music_time_manager.API.Controllers;
 
@@ -11,12 +13,15 @@ public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IFailureHandler _failureHandler;
+    private readonly JwtOptions  _jwtOptions;
     
     public AuthController(IUserService userService, 
-        IFailureHandler failureHandler)
+        IFailureHandler failureHandler,
+        JwtOptions jwtOptions)
     {
         _userService = userService;
         _failureHandler = failureHandler;
+        _jwtOptions = jwtOptions;
     }
     
     [HttpPost("register")]
@@ -50,7 +55,7 @@ public class AuthController : ControllerBase
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
-            Expires = DateTimeOffset.UtcNow.AddDays(7)
+            Expires = DateTimeOffset.UtcNow.AddDays(_jwtOptions.ExpiresHours)
         }); 
         
         return Ok();
