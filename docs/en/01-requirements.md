@@ -133,6 +133,7 @@
 
 ## 🚧 6. Out of Scope for v1
 
+- For every user to have own calendar
 - 📱 SMS notifications
 - 🔑 OAuth
 - ⚡ SignalR / Real-Time
