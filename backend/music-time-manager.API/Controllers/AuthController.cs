@@ -17,11 +17,11 @@ public class AuthController : ControllerBase
     
     public AuthController(IUserService userService, 
         IFailureHandler failureHandler,
-        JwtOptions jwtOptions)
+        IOptions<JwtOptions> jwtOptions)
     {
         _userService = userService;
         _failureHandler = failureHandler;
-        _jwtOptions = jwtOptions;
+        _jwtOptions = jwtOptions.Value;
     }
     
     [HttpPost("register")]
