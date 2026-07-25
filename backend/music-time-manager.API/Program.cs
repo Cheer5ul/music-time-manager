@@ -18,10 +18,6 @@ builder.Services.AddProblemDetails(configure =>
     configure.CustomizeProblemDetails = context =>
     {
         context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
-        
-        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
-        if(activity is not null)
-            context.ProblemDetails.Extensions.Add("traceId", activity.Id);
 
         if (context.Exception is not null)
         {
