@@ -1,14 +1,36 @@
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http.Features;
 using music_time_manager;
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure;
 using music_time_manager.Infrastructure.Options;
 using music_time_manager.Persistence;
 using music_time_manager.API.Extensions;
+using music_time_manager.API.Middlewares.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddProblemDetails(configure =>
+{
+    configure.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+        
+        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+        if(activity is not null)
+            context.ProblemDetails.Extensions.Add("traceId", activity.Id);
+
+        if (context.Exception is not null)
+        {
+            context.ProblemDetails.Detail = builder.Environment.IsDevelopment()
+                ? context.Exception.Message
+                : "An unexpected error occurred";
+        }
+    };
+});
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 
@@ -25,7 +47,6 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -44,6 +65,8 @@ builder.Services.AddScoped<IFailureHandler, FailureHandler>();
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
@@ -68,12 +91,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseHttpsRedirection();
+    
+}app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
@@ -81,6 +100,9 @@ app.UseCookiePolicy(new CookiePolicyOptions()
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
