@@ -80,11 +80,11 @@ This project is documented *before* being built, not after — each design decis
 
 | Doc | Covers |
 |---|---|
-| [`01-requirements.md`](./docs/01-requirements.md) | Functional requirements, user flows, business rules |
-| [`02-database-design.md`](./docs/02-database-design.md) | ER diagram, schema, and *why* each design choice was made |
-| [`03-api-design.md`](./docs/03-api-design.md) | REST contract, DTOs, conventions, status codes |
+| [`01-requirements.md`](.docs/en/01-requirements.md) | Functional requirements, user flows, business rules |
+| [`02-database-design.md`](.docs/en/02-database-design.md) | ER diagram, schema, and *why* each design choice was made |
+| [`03-api-design.md`](.docs/en/03-api-design.md) | REST contract, DTOs, conventions, status codes |
 
-English versions available as `*.en.md` alongside each file.
+Russian language versions available [here](.docs/ru).
 
 ---
 
