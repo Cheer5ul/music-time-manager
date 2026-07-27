@@ -8,5 +8,6 @@ public interface IUserService
     Task<Result> Create(string username, string password, CancellationToken ct = default);
     Task<ResultT<string>> Login(string username, string password, CancellationToken ct = default);
     Task<ResultT<User>> GetByUsername(string username, CancellationToken ct = default);
+    Task<ResultT<User>> GetById(Guid id, CancellationToken ct = default);
     Task<Result> Delete(Guid id, CancellationToken ct = default);
 }

@@ -41,7 +41,7 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetByUsername(username, ct);
         
-        if (user == null) return ResultT<string>.Failures([UserErrors.NotFound(username)]);
+        if (user == null) return ResultT<string>.Failures([UserErrors.NotFoundName(username)]);
         
         var result = _passwordHasher.Verify(password, user.PasswordHash);
 
@@ -59,7 +59,16 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetByUsername(username, ct);
 
-        if (user == null) return ResultT<User>.Failures([UserErrors.NotFound(username)]);
+        if (user == null) return ResultT<User>.Failures([UserErrors.NotFoundName(username)]);
+        
+        return ResultT<User>.Success(user);
+    }
+
+    public async Task<ResultT<User>> GetById(Guid id, CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetById(id, ct);
+        
+        if(user == null) return ResultT<User>.Failures([UserErrors.NotFound()]);
         
         return ResultT<User>.Success(user);
     }
