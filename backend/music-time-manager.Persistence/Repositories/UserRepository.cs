@@ -38,6 +38,17 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task<User?> GetById(Guid id, CancellationToken ct)
+    {
+        var userEntity = await _dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, ct);
+        
+        if(userEntity == null) return null;
+        
+        var user = User.Reconstitute(userEntity.Id, userEntity.UserName, userEntity.PasswordHash);
+        return user;
+    }
     public async Task Delete(Guid id, CancellationToken ct)
     {
         await _dbContext.Users.Where(u => u.Id == id)
