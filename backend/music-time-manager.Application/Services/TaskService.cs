@@ -23,6 +23,18 @@ public class TaskService : ITaskService
         return ResultT<List<Task>>.Success(tasks);
     }
 
+    public async Task<ResultT<(Task task, IReadOnlyList<TaskAssignee> assignees)>> GetTask(
+        Guid taskId, CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
+        if(doesTaskExist == false) return ResultT<(Task task, IReadOnlyList<TaskAssignee> assignees)>
+            .Failures([TaskErrors.DoesNotExist(taskId)]);
+        
+        var taskAndAssignees = await _taskRepository.GetTask(taskId, ct);
+        
+        return ResultT<(Task task, IReadOnlyList<TaskAssignee> assignees)>.Success(taskAndAssignees);
+    }
+
     public async Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default)
     {
@@ -53,7 +65,7 @@ public class TaskService : ITaskService
         if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
 
         var assignees = userIds
-            .Select(userId => TaskAssignee.Reconstitute(taskId, userId))
+            .Select(userId => TaskAssignee.Reconstitute(taskId, userId, null))
             .ToList();
 
         await _taskRepository.ReplaceTaskAssignees(taskId, assignees, ct);
