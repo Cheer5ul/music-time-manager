@@ -5,5 +5,7 @@ public record SubtaskResponse(
     Guid Id,
     string Title,
     CoreStatus Status,
-    // bool IsOverdue,
-    Guid TaskId);
+    bool IsOverdue,
+    Guid TaskId
+    // IReadOnlyList<UserResponseWithId> Assignees
+    );
