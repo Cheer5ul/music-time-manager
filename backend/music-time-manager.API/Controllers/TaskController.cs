@@ -20,6 +20,30 @@ public class TaskController : ControllerBase
         _failureHandler = failureHandler;
     }
 
+    // [Authorize]
+    // [HttpGet]
+    // public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct)
+    // {
+    //     var result = await _taskService.GetTasks(ct);
+    //     
+    //     if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+    //
+    //     var response = result.Value!
+    //         .Select(t => new TaskResponse(
+    //             Id: t.Id,
+    //             Title: t.Title,
+    //             Description: t.Description,
+    //             DueDate: t.DueDate,
+    //             CreatedBy: t.CreatedBy,
+    //             CreatedAt: t.CreatedAt,
+    //             Status: t.Status,
+    //             IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
+    //             RecreatedFromTaskId: t.RecreatedFromTaskId))
+    //         .ToList();
+    //     
+    //     return Ok(response);
+    // }
+
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct)
