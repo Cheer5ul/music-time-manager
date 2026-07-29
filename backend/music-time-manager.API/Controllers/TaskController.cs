@@ -45,25 +45,39 @@ public class TaskController : ControllerBase
     // }
 
     [Authorize]
-    [HttpGet]
-    public async Task<ActionResult<List<TaskResponse>>> GetTasks(CancellationToken ct)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<TaskResponse>> GetTask(Guid id, CancellationToken ct)
     {
-        var result = await _taskService.GetTasks(ct);
-        
+        var result = await _taskService.GetTask(id, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
 
-        var response = result.Value!
-            .Select(t => new TaskResponse(
-                Id: t.Id,
-                Title: t.Title,
-                Description: t.Description,
-                DueDate: t.DueDate,
-                CreatedBy: t.CreatedBy,
-                CreatedAt: t.CreatedAt,
-                Status: t.Status,
-                IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
-                RecreatedFromTaskId: t.RecreatedFromTaskId))
+        var assigneesResponse = result.Value.assignees
+            .Select(ta => new UserResponseWithId(
+                ta.UserId,
+                ta.UserName))
             .ToList();
+        
+        var subtasksResponse = result.Value.task.SubTasks
+            .Select(st => new SubtaskResponse(
+                st.Id,
+                st.Title,
+                result.Value.task.Status,
+                result.Value.task.DueDate < DateTime.UtcNow && result.Value.task.Status != CoreStatus.Done,
+                result.Value.task.Id))
+            .ToList();
+        
+        var response = new TaskResponse(
+            result.Value.task.Id,
+            result.Value.task.Title,
+            result.Value.task.Description,
+            result.Value.task.DueDate,
+            result.Value.task.CreatedAt,
+            result.Value.task.Status,
+            result.Value.task.DueDate < DateTime.UtcNow && result.Value.task.Status != CoreStatus.Done,
+            result.Value.task.CreatedBy,
+            result.Value.task.RecreatedFromTaskId,
+            assigneesResponse,
+            subtasksResponse);
         
         return Ok(response);
     }
