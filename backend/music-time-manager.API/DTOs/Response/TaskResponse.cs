@@ -10,7 +10,7 @@ public record TaskResponse(
     CoreStatus Status,
     bool IsOverdue,
     Guid CreatedBy,
-    Guid? RecreatedFromTaskId
-    // IReadOnlyList<UserSummary> Assignees,
-    // IReadOnlyList<SubtaskResponse> Subtasks
+    Guid? RecreatedFromTaskId,
+    IReadOnlyList<UserResponseWithId> Assignees,
+    IReadOnlyList<SubtaskResponse> Subtasks
     );
