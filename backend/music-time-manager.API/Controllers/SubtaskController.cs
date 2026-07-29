@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
+using CoreStatus = music_time_manager.Core.Models.Status;
 
 namespace music_time_manager.API.Controllers;
 
@@ -28,11 +29,12 @@ public class SubtaskController : ControllerBase
         
         if(subtasks.IsFailure) return _failureHandler.HandleFailure(subtasks, HttpContext);
 
-        var response = subtasks.Value!
+        var response = subtasks.Value.subtasks!
             .Select(s => new SubtaskResponse(
                 Id: s.Id,
                 Title: s.Title,
                 Status: s.Status,
+                IsOverdue: subtasks.Value.dateTimes[s.Id] < DateTime.Now && s.Status != CoreStatus.Done,
                 TaskId: s.TaskId))
             .ToList();
         
