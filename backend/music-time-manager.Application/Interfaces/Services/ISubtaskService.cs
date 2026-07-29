@@ -5,7 +5,8 @@ namespace music_time_manager.Application.Services;
 
 public interface ISubtaskService
 {
-    Task<ResultT<List<Subtask>>> GetSubTasks(CancellationToken ct = default);
+    Task<ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>> GetSubTasks(
+        CancellationToken ct = default);
     Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default);
     Task<Result> CreateSubtask(Guid taskId, string subtaskTitle, CancellationToken ct = default);
 }

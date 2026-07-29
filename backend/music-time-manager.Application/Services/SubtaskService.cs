@@ -14,11 +14,12 @@ public class SubtaskService : ISubtaskService
         _taskRepository = repository;
     }
     
-    public async Task<ResultT<List<Subtask>>> GetSubTasks(CancellationToken ct = default)
+    public async Task<ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>> GetSubTasks(
+        CancellationToken ct = default)
     {
         var subtasks = await _taskRepository.GetSubTasks(ct);
-        
-        return ResultT<List<Subtask>>.Success(subtasks);
+
+        return ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>.Success(subtasks);
     }
     
     public async Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default)
