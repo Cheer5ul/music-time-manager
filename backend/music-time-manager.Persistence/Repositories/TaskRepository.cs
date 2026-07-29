@@ -51,6 +51,7 @@ public class TaskRepository : ITaskRepository
         var taskAssigneeEntities = await _dbContext.TaskAssignees
             .AsNoTracking()
             .Where(tae => tae.TaskId == taskId)
+            .Include(tae => tae.User)
             .ToListAsync(ct);
         
         var subtasks = subtaskEntities
@@ -64,7 +65,8 @@ public class TaskRepository : ITaskRepository
         var taskAssignees = taskAssigneeEntities
             .Select(tae => TaskAssignee.Reconstitute(
                 tae.TaskId,
-                tae.UserId))
+                tae.UserId,
+                tae.User.UserName))
             .ToList();
 
         var task = Core.Models.Task.Reconstitute(
@@ -81,21 +83,29 @@ public class TaskRepository : ITaskRepository
         return (task, taskAssignees);
     }
 
-    public async Task<List<Subtask>> GetSubTasks(CancellationToken ct = default)
+    public async Task<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)> GetSubTasks(CancellationToken ct = default)
     {
         var subtaskEntities = await _dbContext.Subtasks
+            .Include(st => st.Task)
             .AsNoTracking()
             .ToListAsync(ct);
         
         var subtasks = subtaskEntities
-            .Select(se => Core.Models.Subtask.Reconstitute(
+            .Select(se => Subtask.Reconstitute(
                 se.Id,
                 se.Title,
                 se.Status,
                 se.TaskId))
             .ToList();
+        
+        var dateTimes = new Dictionary<Guid, DateTime>();
 
-        return subtasks;
+        foreach (var stEntity in subtaskEntities)
+        {
+            dateTimes.Add(stEntity.Id, stEntity.Task.DueDate);
+        }
+
+        return (subtasks, dateTimes);
     }
 
     public async Task CreateTask(Core.Models.Task task, CancellationToken ct = default)

@@ -12,7 +12,8 @@ public interface ITaskRepository
     /// </remarks>
     Task<(Core.Models.Task task, IReadOnlyList<TaskAssignee> assignees)> GetTask(
         Guid taskId, CancellationToken ct = default);
-    Task<List<Core.Models.Subtask>> GetSubTasks(CancellationToken ct = default);
+
+    Task<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)> GetSubTasks(CancellationToken ct = default);
     Task CreateTask(Core.Models.Task task, CancellationToken ct = default);
 
     Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default);
