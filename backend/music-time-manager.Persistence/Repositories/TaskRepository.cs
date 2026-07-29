@@ -36,6 +36,51 @@ public class TaskRepository : ITaskRepository
         return tasks;
     }
 
+    public async Task<(Core.Models.Task task, IReadOnlyList<TaskAssignee> assignees)> GetTask(
+        Guid taskId, CancellationToken ct = default)
+    {
+        var taskEntity = await _dbContext.Tasks
+            .AsNoTracking()
+            .FirstAsync(t => t.Id == taskId, ct);
+        
+        var subtaskEntities = await _dbContext.Subtasks
+            .AsNoTracking()
+            .Where(ste => ste.TaskId == taskId)
+            .ToListAsync(ct);
+        
+        var taskAssigneeEntities = await _dbContext.TaskAssignees
+            .AsNoTracking()
+            .Where(tae => tae.TaskId == taskId)
+            .ToListAsync(ct);
+        
+        var subtasks = subtaskEntities
+            .Select(ste => Subtask.Reconstitute(
+                ste.Id,
+                ste.Title,
+                ste.Status,
+                ste.TaskId))
+            .ToList();
+
+        var taskAssignees = taskAssigneeEntities
+            .Select(tae => TaskAssignee.Reconstitute(
+                tae.TaskId,
+                tae.UserId))
+            .ToList();
+
+        var task = Core.Models.Task.Reconstitute(
+            taskEntity.Id,
+            taskEntity.Title,
+            taskEntity.DueDate,
+            taskEntity.CreatedAt,
+            taskEntity.Status,
+            taskEntity.CreatedBy,
+            subtasks,
+            taskEntity.Description,
+            taskEntity.RecreatedFromTaskId);
+
+        return (task, taskAssignees);
+    }
+
     public async Task<List<Subtask>> GetSubTasks(CancellationToken ct = default)
     {
         var subtaskEntities = await _dbContext.Subtasks
