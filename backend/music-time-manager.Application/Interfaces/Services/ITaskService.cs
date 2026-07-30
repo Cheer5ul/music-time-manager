@@ -6,7 +6,15 @@ namespace music_time_manager.Application.Services;
 
 public interface ITaskService
 {
-    Task<ResultT<List<Task>>> GetTasks(CancellationToken ct = default);
+    Task<ResultT<List<Task>>> GetTasks(
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? createdBy,
+        DateTime? dueBefore,
+        DateTime? dueAfter,
+        bool? hasAssignees,
+        CancellationToken ct = default);
     Task<ResultT<(Task task, IReadOnlyList<TaskAssignee> assignees)>> GetTask(
         Guid taskId, CancellationToken ct = default);
     Task<Result> CreateTask(string title, DateTime dueDate,

@@ -19,9 +19,25 @@ public class TaskService : ITaskService
         _userRepository = userRepository;
     }
 
-    public async Task<ResultT<List<Task>>> GetTasks(CancellationToken ct = default)
+    public async Task<ResultT<List<Task>>> GetTasks(
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? createdBy,
+        DateTime? dueBefore,
+        DateTime? dueAfter,
+        bool? hasAssignees,
+        CancellationToken ct = default)
     {
-        var tasks = await _taskRepository.GetTasks(ct);
+        var tasks = await _taskRepository.GetTasks(
+            status,
+            isOverdue,
+            assigneeId,
+            createdBy,
+            dueBefore,
+            dueAfter,
+            hasAssignees, 
+            ct);
 
         return ResultT<List<Task>>.Success(tasks);
     }
