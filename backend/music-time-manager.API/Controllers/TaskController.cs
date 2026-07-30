@@ -25,7 +25,15 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<List<TaskResponse>>> GetTasks([FromBody] TaskRequestFilter request, 
         CancellationToken ct)
     {
-        var result = await _taskService.GetTasks(ct);
+        var result = await _taskService.GetTasks(
+            status: request.Status,
+            isOverdue: request.IsOverdue,
+            assigneeId: request.AssigneeId,
+            createdBy: request.CreatedBy,
+            dueBefore: request.DueBefore,
+            dueAfter: request.DueAfter,
+            hasAssignees: request.HasAssignees,
+            ct);
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
