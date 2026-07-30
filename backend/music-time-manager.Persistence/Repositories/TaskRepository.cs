@@ -14,8 +14,19 @@ public class TaskRepository : ITaskRepository
         _dbContext = dbContext;
     }
 
-    public async Task<List<Core.Models.Task>> GetTasks(CancellationToken ct = default)
+    public async Task<List<Core.Models.Task>> GetTasks(
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? createdBy,
+        DateTime? dueBefore,
+        DateTime? dueAfter,
+        bool? hasAssignees,
+        CancellationToken ct = default)
+    
     {
+        
+        
         var taskEntities = await _dbContext.Tasks
             .AsNoTracking()
             .ToListAsync(ct);

@@ -5,7 +5,15 @@ namespace music_time_manager.Persistence.Repositories;
 
 public interface ITaskRepository
 {
-    Task<List<Core.Models.Task>> GetTasks(CancellationToken ct = default);
+    Task<List<Core.Models.Task>> GetTasks(
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? createdBy,
+        DateTime? dueBefore,
+        DateTime? dueAfter,
+        bool? hasAssignees,
+        CancellationToken ct = default);
     
     /// <remarks>
     /// The method does not check the validity and existence of the Task with given id.
