@@ -10,10 +10,13 @@ namespace music_time_manager.Application.Services;
 public class TaskService : ITaskService
 {
     private readonly ITaskRepository _taskRepository;
+    private readonly IUserRepository _userRepository;
     
-    public TaskService(ITaskRepository repository)
+    public TaskService(ITaskRepository repository,
+        IUserRepository userRepository)
     {
         _taskRepository = repository;
+        _userRepository = userRepository;
     }
 
     public async Task<ResultT<List<Task>>> GetTasks(CancellationToken ct = default)
@@ -38,7 +41,8 @@ public class TaskService : ITaskService
     public async Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default)
     {
-        // TODO: if created by id does not exits -> error
+        var doesUserExist = await _userRepository.GetById(createdBy, ct);
+        if(doesUserExist is null) return Result.Failures([TaskErrors.DoesNotExist(createdBy)]);
         
         var task = Task.Create(
             title,
