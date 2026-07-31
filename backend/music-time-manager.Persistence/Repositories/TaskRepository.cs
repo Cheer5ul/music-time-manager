@@ -25,11 +25,23 @@ public class TaskRepository : ITaskRepository
         CancellationToken ct = default)
     
     {
+        var query = _dbContext.Tasks.AsQueryable();
+        
+        if(status.HasValue)
+            query = query.Where(t => t.Status == status.Value);
+        if (isOverdue.HasValue)
+            query = query.Where(t => t.DueDate);
+        if(assigneeId.HasValue)
+            query = query.Where(t => t.TaskAssignees.Any(ta => ta.UserId == assigneeId.Value));
+        if(createdBy.HasValue)
+            query = query.Where(t => t.CreatedBy == createdBy.Value);
+        if(hasAssignees.HasValue)
+            query = hasAssignees.Value
+                ? query.Where(t => t.TaskAssignees.Any())
+                : query.Where(t => !t.TaskAssignees.Any());
         
         
-        var taskEntities = await _dbContext.Tasks
-            .AsNoTracking()
-            .ToListAsync(ct);
+        var taskEntities = await query.ToListAsync(ct);
 
         var tasks = taskEntities
             .Select(te => Core.Models.Task.Reconstitute(
