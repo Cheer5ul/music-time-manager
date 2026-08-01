@@ -25,16 +25,22 @@ public class TaskRepository : ITaskRepository
         CancellationToken ct = default)
     
     {
-        var query = _dbContext.Tasks.AsQueryable();
+        var query = _dbContext.Tasks.AsNoTracking().AsQueryable();
         
         if(status.HasValue)
             query = query.Where(t => t.Status == status.Value);
         if (isOverdue.HasValue)
-            query = query.Where(t => t.DueDate);
+            query = isOverdue.Value
+                ? query.Where(t => t.DueDate < DateTime.UtcNow && t.Status != Status.Done)
+                : query.Where(t => t.DueDate >= DateTime.UtcNow || t.Status == Status.Done); 
         if(assigneeId.HasValue)
             query = query.Where(t => t.TaskAssignees.Any(ta => ta.UserId == assigneeId.Value));
         if(createdBy.HasValue)
             query = query.Where(t => t.CreatedBy == createdBy.Value);
+        if (dueBefore.HasValue)
+            query = query.Where(t => t.DueDate < dueBefore.Value);
+        if (dueAfter.HasValue)
+            query = query.Where(t => t.DueDate > dueAfter.Value);
         if(hasAssignees.HasValue)
             query = hasAssignees.Value
                 ? query.Where(t => t.TaskAssignees.Any())
