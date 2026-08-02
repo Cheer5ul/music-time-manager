@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using music_time_manager.Core.Errors;
+using music_time_manager.Core.Errors.User;
 using music_time_manager.Core.Models;
 using music_time_manager.Core.Result;
 using music_time_manager.Persistence.Repositories;
@@ -58,7 +59,7 @@ public class TaskService : ITaskService
         Guid createdBy, string? description, CancellationToken ct = default)
     {
         var doesUserExist = await _userRepository.GetById(createdBy, ct);
-        if(doesUserExist is null) return Result.Failures([TaskErrors.DoesNotExist(createdBy)]);
+        if(doesUserExist is null) return Result.Failures([UserErrors.DoesNotExits(createdBy)]);
         
         var task = Task.Create(
             title,
