@@ -22,7 +22,7 @@ public class TaskController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<TaskResponse>>> GetTasks([FromBody] TaskRequestFilter request, 
+    public async Task<ActionResult<List<TaskResponse>>> GetTasks([FromQuery] TaskRequestFilter request, 
         CancellationToken ct)
     {
         var result = await _taskService.GetTasks(
@@ -37,22 +37,22 @@ public class TaskController : ControllerBase
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
-        // var response = result.Value!
-        //     .Select(t => new TaskResponse(
-        //         Id: t.Id,
-        //         Title: t.Title,
-        //         Description: t.Description,
-        //         DueDate: t.DueDate,
-        //         CreatedBy: t.CreatedBy,
-        //         CreatedAt: t.CreatedAt,
-        //         Status: t.Status,
-        //         IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
-        //         RecreatedFromTaskId: t.RecreatedFromTaskId,
-        //         Assignees: , 
-        //         Subtasks:  ))
-        //     .ToList();
+        var response = result.Value!
+            .Select(t => new TaskResponse(
+                Id: t.Id,
+                Title: t.Title,
+                Description: t.Description,
+                DueDate: t.DueDate,
+                CreatedBy: t.CreatedBy,
+                CreatedAt: t.CreatedAt,
+                Status: t.Status,
+                IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
+                RecreatedFromTaskId: t.RecreatedFromTaskId,
+                Assignees: Array.Empty<UserResponseWithId>() , 
+                Subtasks:  Array.Empty<SubtaskResponse>()))
+            .ToList();
         
-        return Ok();
+        return Ok(response);
     }
 
     [Authorize]
