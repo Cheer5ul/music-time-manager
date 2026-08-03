@@ -202,6 +202,14 @@ public class TaskRepository : ITaskRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
+    public async Task UpdateStatus(Guid taskId, Status status, CancellationToken ct = default)
+    {
+        await _dbContext.Tasks.Where(t => t.Id == taskId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.Status, status),
+                ct);
+    }
+
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
     {
         var task =  await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId, ct);
