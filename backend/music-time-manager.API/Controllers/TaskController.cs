@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
+using music_time_manager.API.Extensions;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 using CoreStatus = music_time_manager.Core.Models.Status;
@@ -99,10 +101,13 @@ public class TaskController : ControllerBase
         [FromBody] TaskRequest request,
         CancellationToken ct)
     {
+        var createdBy = User.GetUserId();
+        if (createdBy is null) return Unauthorized();
+        
         var result = await _taskService.CreateTask(
             request.Title,
             request.DueDate,
-            request.CreatedBy,
+            createdBy.Value,
             request.Description, 
             ct);
         
@@ -117,6 +122,18 @@ public class TaskController : ControllerBase
         CancellationToken ct)
     {
         var result = await _taskService.AssignUsersToTask(id, request.UserIds, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/status")]
+    public async Task<ActionResult> UpdateStatus(Guid id, [FromQuery] UpdateStatusRequest request,
+        CancellationToken ct)
+    {
+        var result = await _taskService.UpdateStatus(id, request.Status, ct);
+        
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();
