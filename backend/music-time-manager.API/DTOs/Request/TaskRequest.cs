@@ -2,6 +2,5 @@
 
 public record TaskRequest(
     string Title, DateTime DueDate,
-    Guid CreatedBy,
     string? Description);
     
