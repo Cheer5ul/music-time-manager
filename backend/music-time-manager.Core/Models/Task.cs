@@ -81,4 +81,28 @@ public class Task
         return new Task(
             id, title, dueDate, createdAt, status, createdBy, subtasks, description, recreatedFromTaskId);
     }
+
+    public static Result.Result UpdateTitle(string? title)
+    {
+        if(title is not null && string.IsNullOrWhiteSpace(title))
+            return Result.Result.Failures([TaskErrors.InvalidTitle(title)]);
+        
+        return Result.Result.Success;
+    }
+
+    public static Result.Result UpdateDescription(string? description)
+    {
+        if (description != null && string.IsNullOrWhiteSpace(description) ||
+            description != null && description.Length > MAX_DESCRIPTION_LENGTH)
+            return Result.Result.Failures([TaskErrors.InvalidDescription(description)]);
+        return Result.Result.Success;
+    }
+
+    public static Result.Result UpdateDueDate(DateTime? dueDate)
+    {
+        if (dueDate < DateTime.UtcNow ||
+            dueDate - DateTime.UtcNow > TimeSpan.FromDays(365))
+            return Result.Result.Failures([(TaskErrors.InvalidDueDate(dueDate.Value))]);
+        return Result.Result.Success;
+    }
 }
