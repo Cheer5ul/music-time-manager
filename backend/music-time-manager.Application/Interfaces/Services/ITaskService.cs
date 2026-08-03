@@ -20,5 +20,6 @@ public interface ITaskService
     Task<Result> CreateTask(string title, DateTime dueDate,
         Guid createdBy, string? description, CancellationToken ct = default);
     Task<Result> AssignUsersToTask(Guid taskId, List<Guid> userIds, CancellationToken ct = default);
+    Task<Result> UpdateStatus(Guid taskId, Status status, CancellationToken ct = default);
     Task<Result> Delete(Guid taskId, CancellationToken ct = default);
 }

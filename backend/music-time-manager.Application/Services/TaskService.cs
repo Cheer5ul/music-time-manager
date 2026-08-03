@@ -92,12 +92,20 @@ public class TaskService : ITaskService
         await _taskRepository.ReplaceTaskAssignees(taskId, assignees, ct);
         return Result.Success;
     }
-    
+
+    public async Task<Result> UpdateStatus(Guid taskId, Status status, CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
+        if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
+        
+        await _taskRepository.UpdateStatus(taskId, status, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
     {
         var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
-
         if (!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
         
         await _taskRepository.DeleteTask(taskId, ct);
