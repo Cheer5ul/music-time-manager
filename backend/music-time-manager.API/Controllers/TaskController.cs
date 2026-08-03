@@ -140,6 +140,29 @@ public class TaskController : ControllerBase
     }
 
     [Authorize]
+    [HttpPatch("{id:guid}/")]
+    public async Task<ActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskRequest request,
+        CancellationToken ct)
+    {
+        if (request.Title is not null)
+        {
+            var result = await _taskService.UpdateTaskTitle(id, request.Title, ct);
+            if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        }
+        if (request.Description is not null)
+        {
+            var result = await _taskService.UpdateTaskDescription(id, request.Description, ct);
+            if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        }
+        if (request.DueDate is not null)
+        {
+            var result = await _taskService.UpdateTaskDueDate(id, request.DueDate, ct);
+            if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        }
+        return Ok();
+    }
+
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteTask(Guid id, CancellationToken ct)
     {
