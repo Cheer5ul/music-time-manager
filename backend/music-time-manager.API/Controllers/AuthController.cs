@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using music_time_manager.API.DTOs;
+using music_time_manager.API.Extensions;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure.Options;
@@ -75,11 +76,10 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<ActionResult<UserResponseWithId>> Me(CancellationToken ct)
     {
-        var userIdClaim = User.FindFirstValue("userId");
-        if(userIdClaim is null || !Guid.TryParse(userIdClaim, out var userId))
-            return Unauthorized();
+        var userId = User.GetUserId();
+        if(userId is null) return Unauthorized();
 
-        var result = await _userService.GetById(userId, ct);
+        var result = await _userService.GetById(userId.Value, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
 
         var user = result.Value!;
