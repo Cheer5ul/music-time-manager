@@ -21,5 +21,11 @@ public interface ITaskService
         Guid createdBy, string? description, CancellationToken ct = default);
     Task<Result> AssignUsersToTask(Guid taskId, List<Guid> userIds, CancellationToken ct = default);
     Task<Result> UpdateStatus(Guid taskId, Status status, CancellationToken ct = default);
+    Task<Result> UpdateTaskTitle(
+        Guid id, string? title, CancellationToken ct = default);
+    Task<Result> UpdateTaskDescription(
+        Guid id, string? description, CancellationToken ct = default);
+    Task<Result> UpdateTaskDueDate(
+        Guid id, DateTime? dueDate, CancellationToken ct = default);
     Task<Result> Delete(Guid taskId, CancellationToken ct = default);
 }

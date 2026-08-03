@@ -102,6 +102,46 @@ public class TaskService : ITaskService
         return Result.Success;
     }
 
+    public async Task<Result> UpdateTaskTitle(
+        Guid id, string? title,
+        CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(id, ct);
+        if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(id)]);
+        
+        var result = Task.UpdateTitle(title);
+        if(result.IsFailure) return Result.Failures(result.Errors);
+
+        await _taskRepository.UpdateTaskTitle(id, title, ct);
+        return Result.Success;
+    }
+
+    public async Task<Result> UpdateTaskDescription(
+        Guid id, string? description, CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(id, ct);
+        if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(id)]);
+        
+        var result = Task.UpdateDescription(description);
+        if(result.IsFailure) return Result.Failures(result.Errors);
+        
+        await _taskRepository.UpdateTaskDescription(id, description, ct);
+        return Result.Success;
+    }
+
+    public async Task<Result> UpdateTaskDueDate(
+        Guid id, DateTime? dueDate, CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(id, ct);
+        if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(id)]);
+        
+        var result = Task.UpdateDueDate(dueDate);
+        if(result.IsFailure) return Result.Failures(result.Errors);
+        
+        await _taskRepository.UpdateTaskDueDate(id, dueDate.Value, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
     {
