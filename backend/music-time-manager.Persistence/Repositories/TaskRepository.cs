@@ -210,6 +210,30 @@ public class TaskRepository : ITaskRepository
                 ct);
     }
 
+    public async Task UpdateTaskTitle(Guid taskId, string title, CancellationToken ct = default)
+    {
+        await _dbContext.Tasks.Where(t => t.Id == taskId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.Title, title),
+                ct);
+    }
+
+    public async Task UpdateTaskDescription(Guid taskId, string description, CancellationToken ct = default)
+    {
+        await _dbContext.Tasks.Where(t => t.Id == taskId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.Description, description),
+                ct);
+    }
+
+    public async Task UpdateTaskDueDate(Guid taskId, DateTime dueDate, CancellationToken ct = default)
+    {
+        await _dbContext.Tasks.Where(t => t.Id == taskId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.DueDate, dueDate),
+                ct);
+    }
+
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
     {
         var task =  await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == taskId, ct);
