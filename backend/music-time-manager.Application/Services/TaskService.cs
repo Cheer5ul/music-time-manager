@@ -85,6 +85,12 @@ public class TaskService : ITaskService
         var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
         if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
 
+        foreach (var userId in userIds)
+        {
+            var doesUserExist = await _userRepository.GetById(userId, ct);
+            if(doesUserExist == null) return Result.Failures([UserErrors.DoesNotExits(userId)]);
+        }
+        
         var assignees = userIds
             .Select(userId => TaskAssignee.Reconstitute(taskId, userId, null))
             .ToList();
