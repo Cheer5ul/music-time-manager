@@ -158,18 +158,28 @@ public class TaskRepository : ITaskRepository
 
     public async Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default)
     {
-        await _dbContext.TaskAssignees
-            .Where(ta => ta.TaskId == taskId)
-            .ExecuteDeleteAsync(ct);
+        var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-        var entities = assignees.Select(a => new TaskAssigneeEntity()
+
+        await strategy.ExecuteAsync(async () =>
         {
-            TaskId = taskId,
-            UserId = a.UserId,
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+
+            await _dbContext.TaskAssignees
+                .Where(tae => tae.TaskId == taskId)
+                .ExecuteDeleteAsync(ct);
+
+            var entities = assignees.Select(a => new TaskAssigneeEntity()
+            {
+                TaskId = taskId,
+                UserId = a.UserId
+            });
+
+            await _dbContext.TaskAssignees.AddRangeAsync(entities, ct);
+            await _dbContext.SaveChangesAsync(ct);
+
+            await transaction.CommitAsync(ct);
         });
-        
-        await _dbContext.TaskAssignees.AddRangeAsync(entities, ct);
-        await _dbContext.SaveChangesAsync(ct);
     }
 
     public async Task ReplaceSubtaskAssignees(Guid subtaskId, List<SubtaskAssignee> assignees, CancellationToken ct = default)
