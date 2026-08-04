@@ -20,7 +20,14 @@ public static class DependencyInjection
 
         services.AddDbContext<MusicTimeManagerDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString(nameof(MusicTimeManagerDbContext)));
+            options.UseNpgsql(configuration.GetConnectionString(nameof(MusicTimeManagerDbContext)),
+                npgsqlOptions =>
+                {
+                    npgsqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorCodesToAdd: null);
+                });
         });
 
 
