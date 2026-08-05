@@ -148,6 +148,34 @@ public class TaskService : ITaskService
         return Result.Success;
     }
 
+    public async Task<Result> RecreateTask(Guid taskId,
+        DateTime newDueDate, 
+        string? newTitle, 
+        string? newDescription,
+        List<Guid>? newAssigneeIds,
+        CancellationToken ct = default)
+    {
+        var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
+        if(doesTaskExist == false) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
+        
+        var (originalTask, originalAssignees) = await _taskRepository.GetTask(taskId, ct);
+
+        var newTask = Task.Create(
+            title: newTitle ?? originalTask.Title,
+            dueDate: newDueDate,
+            createdBy: originalTask.CreatedBy,
+            subtasks: new List<Subtask>(),
+            description: newDescription ?? originalTask.Description,
+            recreatedFromTaskId: taskId);
+        
+        if(newTask.IsFailure) return Result.Failures(newTask.Errors);
+        
+        var assigneeIds = newAssigneeIds ?? originalAssignees.Select(a => a.UserId).ToList();
+
+        await _taskRepository.RecreateTask(newTask.Value!, assigneeIds, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> Delete(Guid taskId,
         CancellationToken ct = default)
     {

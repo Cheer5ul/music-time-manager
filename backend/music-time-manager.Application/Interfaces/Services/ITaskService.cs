@@ -27,5 +27,12 @@ public interface ITaskService
         Guid id, string? description, CancellationToken ct = default);
     Task<Result> UpdateTaskDueDate(
         Guid id, DateTime? dueDate, CancellationToken ct = default);
+
+    Task<Result> RecreateTask(Guid taskId,
+        DateTime newDueDate,
+        string? newTitle,
+        string? newDescription,
+        List<Guid>? newAssigneeIds,
+        CancellationToken ct = default);
     Task<Result> Delete(Guid taskId, CancellationToken ct = default);
 }
