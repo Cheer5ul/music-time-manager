@@ -56,7 +56,7 @@ public class FailureHandler : IFailureHandler
 
         foreach (var error in errors)
         {
-            if (ErroCodeToStatus.TryGetValue(error.Code, out int statusCode))
+            if (ErrorCodeToStatus.TryGetValue(error.Code, out int statusCode))
             {
                 return statusCode;
             }
@@ -65,7 +65,7 @@ public class FailureHandler : IFailureHandler
         return StatusCodes.Status400BadRequest;
     }
 
-    private static readonly Dictionary<string, int> ErroCodeToStatus = new()
+    private static readonly Dictionary<string, int> ErrorCodeToStatus = new()
     {
         ["NotFound"] = StatusCodes.Status404NotFound,
         ["Forbidden"] = StatusCodes.Status403Forbidden,
