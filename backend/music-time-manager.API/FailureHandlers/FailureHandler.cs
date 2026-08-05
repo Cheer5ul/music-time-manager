@@ -48,7 +48,6 @@ public class FailureHandler : IFailureHandler
     private int GetStatusCode(Result result)
     {
         var errors = GetAllErrors(result);
-
         if (errors.Count == 0)
         {
             return StatusCodes.Status500InternalServerError;
@@ -56,7 +55,7 @@ public class FailureHandler : IFailureHandler
 
         foreach (var error in errors)
         {
-            if (ErrorCodeToStatus.TryGetValue(error.Code, out int statusCode))
+            if (ErrorCodeToStatus.TryGetValue(error.Type, out int statusCode))
             {
                 return statusCode;
             }
@@ -65,20 +64,19 @@ public class FailureHandler : IFailureHandler
         return StatusCodes.Status400BadRequest;
     }
 
-    private static readonly Dictionary<string, int> ErrorCodeToStatus = new()
+    private static readonly Dictionary<ErrorType, int> ErrorCodeToStatus = new()
     {
-        ["NotFound"] = StatusCodes.Status404NotFound,
-        ["Forbidden"] = StatusCodes.Status403Forbidden,
-        ["Unauthorized"] = StatusCodes.Status401Unauthorized,
-        ["Conflict"] = StatusCodes.Status409Conflict,
-        ["ValidationFailed"] = StatusCodes.Status400BadRequest,
+        [ErrorType.NotFound] = StatusCodes.Status404NotFound,
+        [ErrorType.Forbidden] = StatusCodes.Status403Forbidden,
+        [ErrorType.Unauthorized] = StatusCodes.Status401Unauthorized,
+        [ErrorType.Conflict] = StatusCodes.Status409Conflict,
+        [ErrorType.Validation] = StatusCodes.Status400BadRequest,
+        [ErrorType.DomainInvariantViolation] = StatusCodes.Status422UnprocessableEntity
     };
 
-    // TODO: think of a better approach
     private string GetErrorType(Result result)
     {
-        return result.Errors.Count < 1 ? result.Errors[0].Code : 
-            "Unknown";
+        return result.Errors.Count >= 1 ? result.Errors[0].Code : "Unknown";
     }
 
     private string GetErrorTitle(Result result)
@@ -115,10 +113,8 @@ public class FailureHandler : IFailureHandler
         }
 
         var extensions = new Dictionary<string, object>();
-        
-        extensions["errors"] = errors.Select(error => 
-            new Error(error.Code, error.Description)
-        ).ToList();
+
+        extensions["errors"] = errors;
         
         return extensions.Count > 0 ? extensions : null;
     }
