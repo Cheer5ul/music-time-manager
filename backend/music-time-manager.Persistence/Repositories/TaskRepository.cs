@@ -159,8 +159,7 @@ public class TaskRepository : ITaskRepository
     public async Task ReplaceTaskAssignees(Guid taskId, List<TaskAssignee> assignees, CancellationToken ct = default)
     {
         var strategy = _dbContext.Database.CreateExecutionStrategy();
-
-
+        
         await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
@@ -242,6 +241,43 @@ public class TaskRepository : ITaskRepository
             .ExecuteUpdateAsync(
                 s => s.SetProperty(t => t.DueDate, dueDate),
                 ct);
+    }
+
+    public async Task RecreateTask(Core.Models.Task task, 
+         List<Guid> assigneeIds,
+        CancellationToken ct = default)
+    {
+        var strategy = _dbContext.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+
+            var newTaskEntity = new TaskEntity()
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                CreatedAt = task.CreatedAt,
+                Status = task.Status,
+                CreatedBy = task.CreatedBy,
+                RecreatedFromTaskId = task.RecreatedFromTaskId
+            };
+            
+            await _dbContext.Tasks.AddAsync(newTaskEntity, ct);
+
+            var assigneeEntities = assigneeIds.Select(userId => new TaskAssigneeEntity()
+            {
+                TaskId = task.Id,
+                UserId = userId
+            });
+            
+            await _dbContext.TaskAssignees.AddRangeAsync(assigneeEntities, ct);
+
+            await _dbContext.SaveChangesAsync(ct);
+            await transaction.CommitAsync(ct);
+        });
     }
 
     public async Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default)
