@@ -4,7 +4,7 @@ public static class TaskErrors
 {
     private static class Codes
     {
-        public const string InvalidTitle = "Task.InvalidTtile";
+        public const string InvalidTitle = "Task.InvalidTitle";
         public const string InvalidDescription = "Task.InvalidDescription";
         public const string InvalidDueDate = "Task.InvalidDueDate";
         public const string DoesNotExist = "Task.DoesNotExist";
