@@ -163,6 +163,24 @@ public class TaskController : ControllerBase
     }
 
     [Authorize]
+    [HttpPost("{id:guid}/recreate")]
+    public async Task<ActionResult> RecreateTask(Guid id, [FromQuery] TaskRecreateRequest request,
+        CancellationToken ct)
+    {
+        var result = await _taskService.RecreateTask(
+            id,
+            request.DueDate,
+            request.Title,
+            request.Description,
+            request.AssigneeIds,
+            ct);
+        
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult> DeleteTask(Guid id, CancellationToken ct)
     {
