@@ -12,18 +12,23 @@ public static class TaskErrors
     }    
     public static Error InvalidTitle(string title) =>
         new Error(Codes.InvalidTitle, 
-            $"Title '{title}' is invalid.");
+            $"Title '{title}' is invalid.",
+            ErrorType.Validation);
     public static Error InvalidDescription(string description) => 
         new Error(Codes.InvalidDescription,
-                $"Description '{description}' is invalid.");
+                $"Description '{description}' is invalid.",
+                ErrorType.Validation);
     public static Error InvalidDueDate(DateTime dueDate) =>
         new Error(Codes.InvalidDueDate,
-            $"DueDate '{dueDate}' is invalid.");
+            $"DueDate '{dueDate}' is invalid.",
+            ErrorType.Validation);
 
     public static Error DoesNotExist(Guid id) =>
         new Error(Codes.DoesNotExist,
-            $"Task with id {id} does not exist.");
+            $"Task with id {id} does not exist.",
+            ErrorType.NotFound);
     public static Error MustHaveAtLeastOneAssignee() =>
         new Error(Codes.MustHaveAtLeastOneAssignee,
-            $"Task must have at least one assignee.");
+            $"Task must have at least one assignee.",
+            ErrorType.DomainInvariantViolation);
 }
