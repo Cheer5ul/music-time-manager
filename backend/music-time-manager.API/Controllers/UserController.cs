@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
+using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 
 namespace music_time_manager.API.Controllers;
@@ -21,23 +22,37 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<UserResponse>> GetByUsername(string username, 
-        CancellationToken ct)
+    public async Task<ActionResult<List<UserResponse>>> GetUsers(CancellationToken ct)
     {
-        var result = await _userService.GetByUsername(username, ct);
+        var result = await _userService.GetUsers(ct);
         
-        if (result.Value == null) return _failureHandler.HandleFailure(result, HttpContext);
-        
-        var response = new UserResponse(result.Value.UserName);
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+
+        var response = result.Value!.Select(u =>
+            new UserResponse(u.UserName)).ToList();
         
         return Ok(response);
-    } 
+    }
 
     [Authorize]
-    [HttpDelete]
-    public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<UserResponse>> GetById(Guid id, CancellationToken ct)
     {
-        await _userService.Delete(id, ct);
+        var result = await _userService.GetById(id, ct);
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        var response = new UserResponse(result.Value!.UserName);
+        
+        return Ok(response);
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/username")]
+    public async Task<ActionResult> UpdateUsername(Guid id, [FromBody] UpdateUsernameRequest request,
+        CancellationToken ct)
+    {
+        var result = await _userService.UpdateUsername(id, request.NewUsername, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();
     }
