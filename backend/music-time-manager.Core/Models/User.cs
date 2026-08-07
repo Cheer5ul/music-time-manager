@@ -34,4 +34,13 @@ public class User
     {
         return new User(id, username, passwordHash);
     }
+
+    public static Result.Result UpdateUsername(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username) || username.Length > MAX_USERNAME_LENGTH)
+        {
+            return ResultT<User>.Failures([UserErrors.InvalidUsername(username)]);
+        }
+        return Result.Result.Success;
+    }
 } 
