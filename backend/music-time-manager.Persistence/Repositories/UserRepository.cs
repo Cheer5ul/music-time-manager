@@ -13,17 +13,16 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task Create(User user, CancellationToken ct)
+    public async Task<List<User>> GetUsers(CancellationToken ct)
     {
-        var userEntity = new UserEntity()
-        {
-            Id = user.Id,
-            UserName = user.UserName,
-            PasswordHash = user.PasswordHash,
-        };
+        var userEntities = await _dbContext.Users
+            .AsNoTracking()
+            .ToListAsync(ct);
         
-        await _dbContext.Users.AddAsync(userEntity, ct);
-        await _dbContext.SaveChangesAsync(ct);
+        var users = userEntities.Select(u => 
+            User.Reconstitute(u.Id, u.UserName, u.PasswordHash)).ToList();
+        
+        return users;
     }
 
     public async Task<User?> GetByUsername(string username, CancellationToken ct)
@@ -49,6 +48,21 @@ public class UserRepository : IUserRepository
         var user = User.Reconstitute(userEntity.Id, userEntity.UserName, userEntity.PasswordHash);
         return user;
     }
+    
+    public async Task Create(User user, CancellationToken ct)
+    {
+        var userEntity = new UserEntity()
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            PasswordHash = user.PasswordHash,
+        };
+        
+        await _dbContext.Users.AddAsync(userEntity, ct);
+        await _dbContext.SaveChangesAsync(ct);
+    }
+    
+    
     public async Task Delete(Guid id, CancellationToken ct)
     {
         await _dbContext.Users.Where(u => u.Id == id)
