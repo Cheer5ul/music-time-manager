@@ -21,6 +21,13 @@ public class UserService : IUserService
         _jwtProvider = jwtProvider;
     }
 
+    public async Task<ResultT<List<User>>> GetUsers(CancellationToken ct)
+    {
+        var users = await _userRepository.GetUsers(ct);
+
+        return ResultT<List<User>>.Success(users);
+    }
+
     public async Task<Result> Create(string username, string password, CancellationToken ct = default)
     {
         var isNameUsed = await _userRepository.GetByUsername(username, ct);
