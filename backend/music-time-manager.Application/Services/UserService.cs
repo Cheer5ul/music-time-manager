@@ -80,6 +80,18 @@ public class UserService : IUserService
         return ResultT<User>.Success(user);
     }
 
+    public async Task<Result> UpdateUsername(Guid id, string newUsername, CancellationToken ct = default)
+    {
+        var result = User.UpdateUsername(newUsername);
+        if(result.IsFailure) return Result.Failures(result.Errors);
+        
+        var doesUserExist = await _userRepository.GetById(id, ct);
+        if (doesUserExist is null) return Result.Failures([UserErrors.DoesNotExits(id)]);
+        
+        await _userRepository.UpdateUsername(id, newUsername, ct);
+        return Result.Success;
+    }
+    
     public async Task<Result> Delete(Guid id, CancellationToken ct = default)
     {
         await _userRepository.Delete(id, ct);
