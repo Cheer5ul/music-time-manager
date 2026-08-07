@@ -61,7 +61,15 @@ public class UserRepository : IUserRepository
         await _dbContext.Users.AddAsync(userEntity, ct);
         await _dbContext.SaveChangesAsync(ct);
     }
-    
+
+    public async Task UpdateUsername(Guid id, string newUsername, CancellationToken ct)
+    {
+        await _dbContext.Users
+            .Where(u => u.Id == id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(u => u.UserName, newUsername),
+                ct);
+    }
     
     public async Task Delete(Guid id, CancellationToken ct)
     {

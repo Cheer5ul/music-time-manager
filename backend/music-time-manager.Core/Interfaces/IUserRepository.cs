@@ -9,5 +9,6 @@ public interface IUserRepository
     Task<User?> GetByUsername(string username, CancellationToken ct);
     Task<User?> GetById(Guid id, CancellationToken ct);
     Task Create(User user, CancellationToken ct);
+    Task UpdateUsername(Guid id, string newUsername, CancellationToken ct);
     Task Delete(Guid id, CancellationToken ct);
 }
