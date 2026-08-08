@@ -10,6 +10,7 @@ public static class UserErrors
         public const string FailedToLogin = "User.FailedToLogin";
         public const string NameAlreadyUsed = "User.NameAlreadyUsed";
         public const string DoesNotExist = "User.DoesNotExist";
+        public const string InvalidPassword = "User.InvalidPassword";
     }
     public static Error InvalidUsername(string username) => 
         new Error(Codes.InvalidUsername,
@@ -36,4 +37,9 @@ public static class UserErrors
         new Error(Codes.DoesNotExist,
             $"User with id {id} does not exist.",
             ErrorType.NotFound);
+
+    public static Error InvalidPassword(string password) =>
+        new Error(Codes.InvalidPassword,
+            $"Password '{password}' is invalid.",
+            ErrorType.Validation);
 }
