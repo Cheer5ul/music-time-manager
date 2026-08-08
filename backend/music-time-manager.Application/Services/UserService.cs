@@ -33,10 +33,12 @@ public class UserService : IUserService
         var isNameUsed = await _userRepository.GetByUsername(username, ct);
         if (isNameUsed != null) return Result.Failures([UserErrors.NameAlreadyUsed(username)]);
         
+        var validatePassword = User.ValidatePassword(password);
+        if(validatePassword.IsFailure) return Result.Failures(validatePassword.Errors);
+        
         var passwordHash = _passwordHasher.Generate(password);
         
         var user = User.Create(username, passwordHash);
-        
         if(user.IsFailure) return Result.Failures(user.Errors);
         
         await _userRepository.Create(user.Value!, ct);
@@ -47,7 +49,6 @@ public class UserService : IUserService
     public async Task<ResultT<string>> Login(string username, string password, CancellationToken ct = default)
     {
         var user = await _userRepository.GetByUsername(username, ct);
-        
         if (user == null) return ResultT<string>.Failures([UserErrors.NotFoundName(username)]);
         
         var result = _passwordHasher.Verify(password, user.PasswordHash);
@@ -74,7 +75,6 @@ public class UserService : IUserService
     public async Task<ResultT<User>> GetById(Guid id, CancellationToken ct = default)
     {
         var user = await _userRepository.GetById(id, ct);
-        
         if(user == null) return ResultT<User>.Failures([UserErrors.NotFound()]);
         
         return ResultT<User>.Success(user);
@@ -82,8 +82,8 @@ public class UserService : IUserService
 
     public async Task<Result> UpdateUsername(Guid id, string newUsername, CancellationToken ct = default)
     {
-        var result = User.UpdateUsername(newUsername);
-        if(result.IsFailure) return Result.Failures(result.Errors);
+        var validateNewUsername = User.UpdateUsername(newUsername);
+        if(validateNewUsername.IsFailure) return Result.Failures(validateNewUsername.Errors);
         
         var doesUserExist = await _userRepository.GetById(id, ct);
         if (doesUserExist is null) return Result.Failures([UserErrors.DoesNotExits(id)]);
@@ -91,7 +91,25 @@ public class UserService : IUserService
         await _userRepository.UpdateUsername(id, newUsername, ct);
         return Result.Success;
     }
-    
+
+    public async Task<Result> UpdatePassword(Guid id, string currentPassword, string newPassword, CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetById(id, ct);
+        if (user is null) return Result.Failures([UserErrors.DoesNotExits(id)]);
+        
+        var isPasswordCorrect = _passwordHasher.Verify(currentPassword,  user.PasswordHash);
+        if (!isPasswordCorrect)
+        {
+            return Result.Failures([UserErrors.FailedToLogin()]);
+        }
+
+        var validateNewPassword = User.ValidatePassword(newPassword);
+        if(validateNewPassword.IsFailure) return Result.Failures([UserErrors.InvalidPassword(newPassword)]);
+         
+        await _userRepository.UpdatePassword(id, newPassword, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> Delete(Guid id, CancellationToken ct = default)
     {
         await _userRepository.Delete(id, ct);

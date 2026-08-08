@@ -11,5 +11,6 @@ public interface IUserService
     Task<ResultT<User>> GetByUsername(string username, CancellationToken ct = default);
     Task<ResultT<User>> GetById(Guid id, CancellationToken ct = default);
     Task<Result> UpdateUsername(Guid id, string newUsername, CancellationToken ct = default);
+    Task<Result> UpdatePassword(Guid id, string currentPassword, string newPassword, CancellationToken ct = default);
     Task<Result> Delete(Guid id, CancellationToken ct = default);
 }
