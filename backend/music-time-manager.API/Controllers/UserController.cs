@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using music_time_manager.API.DTOs;
+using music_time_manager.API.Extensions;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
 
@@ -48,10 +49,14 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id:guid}/username")]
-    public async Task<ActionResult> UpdateUsername(Guid id, [FromBody] UpdateUsernameRequest request,
+    public async Task<ActionResult> UpdateUsername([FromBody] UpdateUsernameRequest request,
         CancellationToken ct)
     {
         var result = await _userService.UpdateUsername(id, request.NewUsername, ct);
+        var userId = User.GetUserId();
+        if(userId is null) return Unauthorized();
+        
+        var result = await _userService.UpdateUsername(userId.Value, request.NewUsername, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();
