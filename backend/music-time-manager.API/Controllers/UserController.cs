@@ -69,6 +69,8 @@ public class UserController : ControllerBase
         var userId = User.GetUserId();
         if (userId is null) return Unauthorized();
 
+        
+        // TODO: FIX, HERE IS BUG
         var result = await _userService.UpdatePassword(userId.Value, request.CurrentPassword,
             request.NewPassword, ct);
         if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
