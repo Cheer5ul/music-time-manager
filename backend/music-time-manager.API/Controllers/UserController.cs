@@ -52,12 +52,26 @@ public class UserController : ControllerBase
     public async Task<ActionResult> UpdateUsername([FromBody] UpdateUsernameRequest request,
         CancellationToken ct)
     {
-        var result = await _userService.UpdateUsername(id, request.NewUsername, ct);
         var userId = User.GetUserId();
         if(userId is null) return Unauthorized();
         
         var result = await _userService.UpdateUsername(userId.Value, request.NewUsername, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/password")]
+    public async Task<ActionResult> UpdatePassword(Guid id, [FromBody] UpdatePasswordRequest request,
+        CancellationToken ct)
+    {
+        var userId = User.GetUserId();
+        if (userId is null) return Unauthorized();
+
+        var result = await _userService.UpdatePassword(userId.Value, request.CurrentPassword,
+            request.NewPassword, ct);
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();
     }
