@@ -70,7 +70,15 @@ public class UserRepository : IUserRepository
                 s => s.SetProperty(u => u.UserName, newUsername),
                 ct);
     }
-    
+
+    public async Task UpdatePassword(Guid id, string newPassword, CancellationToken ct)
+    {
+        await _dbContext.Users.Where(u => u.Id == id)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(u => u.PasswordHash, newPassword),
+                ct);
+    }
+
     public async Task Delete(Guid id, CancellationToken ct)
     {
         await _dbContext.Users.Where(u => u.Id == id)
