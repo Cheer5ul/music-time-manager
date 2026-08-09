@@ -100,13 +100,15 @@ public class UserService : IUserService
         var isPasswordCorrect = _passwordHasher.Verify(currentPassword,  user.PasswordHash);
         if (!isPasswordCorrect)
         {
-            return Result.Failures([UserErrors.FailedToLogin()]);
+            return Result.Failures([UserErrors.IncorrectCurrentPassword()]);
         }
 
         var validateNewPassword = User.ValidatePassword(newPassword);
         if(validateNewPassword.IsFailure) return Result.Failures([UserErrors.InvalidPassword(newPassword)]);
          
-        await _userRepository.UpdatePassword(id, newPassword, ct);
+        var passwordHash = _passwordHasher.Generate(newPassword);
+        
+        await _userRepository.UpdatePassword(id, passwordHash, ct);
         return Result.Success;
     }
 
