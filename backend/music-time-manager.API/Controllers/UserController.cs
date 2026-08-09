@@ -47,6 +47,14 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+
+    [Authorize]
+    [HttpGet("{id:guid}/stats}")]
+    public async Task<ActionResult<UserStatsResponse>> GetStats(Guid id, CancellationToken ct)
+    {
+        return null;
+    }
+
     [Authorize]
     [HttpPatch("{id:guid}/username")]
     public async Task<ActionResult> UpdateUsername([FromBody] UpdateUsernameRequest request,
