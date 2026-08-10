@@ -49,10 +49,16 @@ public class UserController : ControllerBase
 
 
     [Authorize]
-    [HttpGet("{id:guid}/stats}")]
+    [HttpGet("{id:guid}/stats")]
     public async Task<ActionResult<UserStatsResponse>> GetStats(Guid id, CancellationToken ct)
     {
-        return null;
+        var result = await _userService.GetStats(id, ct);
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+
+        var response = new UserStatsResponse(result.Value!.CompletedCount,
+            result.Value!.MissedCound);
+
+        return Ok(response);
     }
 
     [Authorize]
