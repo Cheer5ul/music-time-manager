@@ -8,6 +8,7 @@ public interface IUserRepository
     Task<List<User>> GetUsers(CancellationToken ct);
     Task<User?> GetByUsername(string username, CancellationToken ct);
     Task<User?> GetById(Guid id, CancellationToken ct);
+    Task<(int CompletedCount, int MissedCound)> GetStats(Guid userId, CancellationToken ct);
     Task Create(User user, CancellationToken ct);
     Task UpdateUsername(Guid id, string newUsername, CancellationToken ct);
     Task UpdatePassword(Guid id, string newPassword, CancellationToken ct);

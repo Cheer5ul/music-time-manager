@@ -48,7 +48,36 @@ public class UserRepository : IUserRepository
         var user = User.Reconstitute(userEntity.Id, userEntity.UserName, userEntity.PasswordHash);
         return user;
     }
-    
+
+    public async Task<(int CompletedCount, int MissedCound)> GetStats(Guid userId, CancellationToken ct)
+    {
+        var completedTasksCount = await _dbContext.TaskAssignees
+            .AsNoTracking()
+            .Where(ta => ta.UserId == userId && ta.Task.Status == Status.Done)
+            .CountAsync(ct);
+        
+        var completedSubtasksCount = await _dbContext.SubtaskAssignees
+            .AsNoTracking()
+            .Where(sa => sa.UserId == userId && sa.Subtask.Status == Status.Done)
+            .CountAsync(ct);
+        
+        var missedTaskCount = await _dbContext.TaskAssignees
+            .AsNoTracking()
+            .Where(ta => ta.UserId == userId 
+                         && ta.Task.Status != Status.Done
+                         && ta.Task.DueDate < DateTime.UtcNow)
+            .CountAsync(ct);
+        
+        var missedSubtaskCount = await _dbContext.SubtaskAssignees
+            .AsNoTracking()
+            .Where(sa => sa.UserId == userId 
+                         && sa.Subtask.Status != Status.Done
+                         && sa.Subtask.Task.DueDate < DateTime.UtcNow)
+            .CountAsync(ct);
+        
+        return (completedTasksCount + completedSubtasksCount, missedTaskCount + missedSubtaskCount);
+    }
+
     public async Task Create(User user, CancellationToken ct)
     {
         var userEntity = new UserEntity()
