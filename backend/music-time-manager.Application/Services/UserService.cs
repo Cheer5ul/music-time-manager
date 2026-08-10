@@ -80,6 +80,16 @@ public class UserService : IUserService
         return ResultT<User>.Success(user);
     }
 
+    public async Task<ResultT<(int CompletedCount, int MissedCound)>> GetStats(Guid userId, CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetById(userId, ct);
+        if(user == null) return ResultT<(int CompletedCount, int MissedCound)>.Failures([UserErrors.NotFound()]);
+        
+        var stats = await _userRepository.GetStats(userId, ct);
+        
+        return ResultT<(int CompletedCount, int MissedCound)>.Success(stats);
+    }
+
     public async Task<Result> UpdateUsername(Guid id, string newUsername, CancellationToken ct = default)
     {
         var validateNewUsername = User.UpdateUsername(newUsername);
