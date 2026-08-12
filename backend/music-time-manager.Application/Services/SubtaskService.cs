@@ -49,7 +49,7 @@ public class SubtaskService : ISubtaskService
     public async Task<Result> UpdateSubtaskStatus(Guid subtaskId, Status status, CancellationToken ct = default)
     {
         var doesSubtaskExist = await _taskRepository.DoesSubtaskExist(subtaskId, ct);
-        if(!doesSubtaskExist) return Result.Failures([TaskErrors.DoesNotExist(subtaskId)]);
+        if(!doesSubtaskExist) return Result.Failures([SubtaskErrors.DoesNotExist(subtaskId)]);
         
         await _taskRepository.UpdateSubtaskStatus(subtaskId, status, ct);
         return Result.Success;
@@ -75,8 +75,8 @@ public class SubtaskService : ISubtaskService
     
     public async Task<Result> DeleteSubtask(Guid subtaskId, CancellationToken ct = default)
     {
-        var doesSubtaskExist = await _taskRepository.DoesTaskExist(subtaskId, ct);
-        if(!doesSubtaskExist) return Result.Failures([TaskErrors.DoesNotExist(subtaskId)]);
+        var doesSubtaskExist = await _taskRepository.DoesSubtaskExist(subtaskId, ct);
+        if(!doesSubtaskExist) return Result.Failures([SubtaskErrors.DoesNotExist(subtaskId)]);
 
         await _taskRepository.DeleteSubtask(subtaskId, ct);
         return Result.Success;
