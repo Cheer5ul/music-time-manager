@@ -36,4 +36,5 @@ public interface ITaskRepository
     Task<bool> DoesTaskExist(Guid taskId, CancellationToken ct = default);
     Task<bool> DoesSubtaskExist(Guid subtaskId, CancellationToken ct = default);
     Task DeleteTask(Guid taskId, CancellationToken ct = default);
+    Task DeleteSubtask(Guid subtaskId, CancellationToken ct = default);
 }

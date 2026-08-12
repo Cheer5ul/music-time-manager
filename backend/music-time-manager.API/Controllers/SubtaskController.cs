@@ -84,4 +84,14 @@ public class SubtaskController : ControllerBase
         
         return Ok();
     }
+
+    [Authorize]
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult> DeleteSubtask(Guid id, CancellationToken ct)
+    {
+        var result = await _subtaskService.DeleteSubtask(id, ct);
+        if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
 }

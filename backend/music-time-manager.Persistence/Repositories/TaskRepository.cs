@@ -317,4 +317,10 @@ public class TaskRepository : ITaskRepository
         await _dbContext.Tasks.Where(te => te.Id == taskId)
             .ExecuteDeleteAsync(ct);
     }
+
+    public async Task DeleteSubtask(Guid subtaskId, CancellationToken ct = default)
+    {
+        await _dbContext.Subtasks.Where(t => t.Id == subtaskId)
+            .ExecuteDeleteAsync(ct);
+    }
 }

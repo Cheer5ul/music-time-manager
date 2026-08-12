@@ -11,4 +11,5 @@ public interface ISubtaskService
     Task<Result> UpdateSubtaskTitle(Guid subtaskId, string newTile, CancellationToken ct = default);
     Task<Result> UpdateSubtaskStatus(Guid subtaskId, Status status, CancellationToken ct = default);
     Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default);
+    Task<Result> DeleteSubtask(Guid subtaskId, CancellationToken ct = default);
 }
