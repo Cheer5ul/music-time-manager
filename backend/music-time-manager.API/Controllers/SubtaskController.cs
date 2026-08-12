@@ -62,6 +62,17 @@ public class SubtaskController : ControllerBase
         
         return Ok();
     }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/status")]
+    public async Task<ActionResult> UpdateSubtaskStatus(Guid id, [FromQuery] UpdateStatusRequest request,
+        CancellationToken ct)
+    {
+        var result = await _subtaskService.UpdateSubtaskStatus(id, request.Status, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
     
     [Authorize]
     [HttpPut("{id:guid}/assignees")]

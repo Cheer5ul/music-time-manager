@@ -34,6 +34,15 @@ public class SubtaskService : ISubtaskService
         return Result.Success;
     }
 
+    public async Task<Result> UpdateSubtaskStatus(Guid subtaskId, Status status, CancellationToken ct = default)
+    {
+        var doesSubtaskExist = await _taskRepository.DoesSubtaskExist(subtaskId, ct);
+        if(!doesSubtaskExist) return Result.Failures([TaskErrors.DoesNotExist(subtaskId)]);
+        
+        await _taskRepository.UpdateSubtaskStatus(subtaskId, status, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default)
     {
         if (userIds.Count == 0)
