@@ -211,7 +211,7 @@ public class TaskRepository : ITaskRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateStatus(Guid taskId, Status status, CancellationToken ct = default)
+    public async Task UpdateTaskStatus(Guid taskId, Status status, CancellationToken ct = default)
     {
         await _dbContext.Tasks.Where(t => t.Id == taskId)
             .ExecuteUpdateAsync(

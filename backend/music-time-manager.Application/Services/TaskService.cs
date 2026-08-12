@@ -104,7 +104,7 @@ public class TaskService : ITaskService
         var doesTaskExist = await _taskRepository.DoesTaskExist(taskId, ct);
         if(!doesTaskExist) return Result.Failures([TaskErrors.DoesNotExist(taskId)]);
         
-        await _taskRepository.UpdateStatus(taskId, status, ct);
+        await _taskRepository.UpdateTaskStatus(taskId, status, ct);
         return Result.Success;
     }
 
