@@ -46,15 +46,13 @@ public class Subtask
         return new Subtask(id, title, status, taskId);
     }
 
-    public Result.Result UpdateTitle(string title)
+    public static Result.Result UpdateTitle(string title)
     {
         if (string.IsNullOrWhiteSpace(title) || title.Length > Task.MAX_TITLE_LENGTH ||
             title.Length < Task.MIN_TITLE_LENGTH)
         {
             return Result.Result.Failures([SubtaskErrors.InvalidTitle(title)]);
         }
-        
-        Title =  title;
         
         return Result.Result.Success;
     }
