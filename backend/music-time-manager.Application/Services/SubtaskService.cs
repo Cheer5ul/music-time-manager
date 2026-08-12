@@ -21,7 +21,19 @@ public class SubtaskService : ISubtaskService
 
         return ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>.Success(subtasks);
     }
-    
+
+    public async Task<Result> UpdateSubtaskTitle(Guid subtaskId, string newTitle, CancellationToken ct = default)
+    {
+        var doesSubtaskExist = await _taskRepository.DoesSubtaskExist(subtaskId, ct);
+        if(!doesSubtaskExist) return Result.Failures([SubtaskErrors.DoesNotExist(subtaskId)]);
+
+        var validateNewTitle = Subtask.UpdateTitle(newTitle);
+        if(validateNewTitle.IsFailure) return Result.Failures(validateNewTitle.Errors);
+        
+        await _taskRepository.UpdateSubtaskTitle(subtaskId, newTitle, ct);
+        return Result.Success;
+    }
+
     public async Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default)
     {
         if (userIds.Count == 0)

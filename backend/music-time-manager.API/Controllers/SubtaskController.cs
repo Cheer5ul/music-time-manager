@@ -42,23 +42,33 @@ public class SubtaskController : ControllerBase
     }
     
     [Authorize]
-    [HttpPost("{id:guid}/assignees")]
-    public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
+    [HttpPost("/tasks/{taskId:guid}/subtasks")]
+    public async Task<ActionResult> CreateSubtask(Guid taskId, [FromBody] CreateSubtaskRequest subtaskRequest,
         CancellationToken ct)
     {
-        var result = await _subtaskService.AssignUsersToSubtask(id, request.UserIds, ct);
+        var result = await _subtaskService.CreateSubtask(taskId, subtaskRequest.Title, ct);
+        if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
+        
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}")]
+    public async Task<ActionResult> UpdateSubtaskTitle(Guid id, [FromBody] UpdateSubtaskTitleRequest request,
+        CancellationToken ct)
+    {
+        var result = await _subtaskService.UpdateSubtaskTitle(id, request.NewTitle, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();
     }
     
     [Authorize]
-    [HttpPost("/tasks/{taskId:guid}/subtasks")]
-    public async Task<ActionResult> CreateSubtask(Guid taskId, [FromBody] CreateSubtaskRequest subtaskRequest,
+    [HttpPut("{id:guid}/assignees")]
+    public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
         CancellationToken ct)
     {
-        var result = await _subtaskService.CreateSubtask(taskId, subtaskRequest.Title, ct);
-        
+        var result = await _subtaskService.AssignUsersToSubtask(id, request.UserIds, ct);
         if(result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
         
         return Ok();

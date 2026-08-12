@@ -7,6 +7,7 @@ public interface ISubtaskService
 {
     Task<ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>> GetSubTasks(
         CancellationToken ct = default);
-    Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default);
     Task<Result> CreateSubtask(Guid taskId, string subtaskTitle, CancellationToken ct = default);
+    Task<Result> UpdateSubtaskTitle(Guid subtaskId, string newTile, CancellationToken ct = default);
+    Task<Result> AssignUsersToSubtask(Guid subtaskId, List<Guid> userIds, CancellationToken ct = default);
 }

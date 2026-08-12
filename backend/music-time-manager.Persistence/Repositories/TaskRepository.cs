@@ -243,6 +243,14 @@ public class TaskRepository : ITaskRepository
                 ct);
     }
 
+    public async Task UpdateSubtaskTitle(Guid subtaskId, string title, CancellationToken ct = default)
+    {
+        await _dbContext.Subtasks.Where(st => st.Id == subtaskId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.Title, title),
+                ct);
+    }
+
     public async Task RecreateTask(Core.Models.Task task, 
          List<Guid> assigneeIds,
         CancellationToken ct = default)

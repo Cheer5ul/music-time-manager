@@ -28,6 +28,7 @@ public interface ITaskRepository
     Task UpdateTaskTitle(Guid taskId, string title, CancellationToken ct = default);
     Task UpdateTaskDescription(Guid taskId, string description, CancellationToken ct = default);
     Task UpdateTaskDueDate(Guid taskId, DateTime dueDate, CancellationToken ct = default);
+    Task UpdateSubtaskTitle(Guid subtaskId, string title, CancellationToken ct = default);
     Task RecreateTask(Core.Models.Task task,
         List<Guid> assigneeIds,
         CancellationToken ct = default);
