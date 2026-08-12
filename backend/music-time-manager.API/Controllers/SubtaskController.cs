@@ -23,9 +23,15 @@ public class SubtaskController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<SubtaskResponse>>> GetSubtasks(CancellationToken ct)
+    public async Task<ActionResult<List<SubtaskResponse>>> GetSubtasks([FromQuery] SubtaskRequestFilter request,
+        CancellationToken ct)
     {
-        var subtasks = await _subtaskService.GetSubTasks(ct);
+        var subtasks = await _subtaskService.GetSubtasks(
+            request.Status,
+            request.IsOverdue,
+            request.AssigneeId,
+            request.TaskId,
+            ct);
         
         if(subtasks.IsFailure) return _failureHandler.HandleFailure(subtasks, HttpContext);
 

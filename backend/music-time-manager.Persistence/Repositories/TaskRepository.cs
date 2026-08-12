@@ -112,12 +112,28 @@ public class TaskRepository : ITaskRepository
         return (task, taskAssignees);
     }
 
-    public async Task<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)> GetSubTasks(CancellationToken ct = default)
+    public async Task<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)> GetSubTasks(        
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? taskId,
+        CancellationToken ct = default)
     {
-        var subtaskEntities = await _dbContext.Subtasks
-            .Include(st => st.Task)
-            .AsNoTracking()
-            .ToListAsync(ct);
+        var query = _dbContext.Subtasks.AsNoTracking().AsQueryable();
+
+        if (status.HasValue)
+            query = query.Where(st => st.Status == status.Value);
+        if (isOverdue.HasValue)
+            query = isOverdue.Value
+                ? query.Where(st => st.Task.DueDate < DateTime.UtcNow && st.Status != Status.Done)
+                : query.Where(st => st.Task.DueDate >= DateTime.UtcNow || st.Status == Status.Done);
+        if (assigneeId.HasValue)
+            query = query.Where(st => st.Task.TaskAssignees.Any(ta => ta.UserId == assigneeId.Value));
+        if(taskId.HasValue)
+            query = query.Where(st => st.TaskId == taskId.Value);
+        
+        var subtaskEntities = await
+            query.Include(st => st.Task).ToListAsync(ct);
         
         var subtasks = subtaskEntities
             .Select(se => Subtask.Reconstitute(
@@ -128,7 +144,6 @@ public class TaskRepository : ITaskRepository
             .ToList();
         
         var dateTimes = new Dictionary<Guid, DateTime>();
-
         foreach (var stEntity in subtaskEntities)
         {
             dateTimes.Add(stEntity.Id, stEntity.Task.DueDate);

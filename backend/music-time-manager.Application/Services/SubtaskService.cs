@@ -14,10 +14,15 @@ public class SubtaskService : ISubtaskService
         _taskRepository = repository;
     }
     
-    public async Task<ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>> GetSubTasks(
+    public async Task<ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>> GetSubtasks(
+        Status? status,
+        bool? isOverdue,
+        Guid? assigneeId,
+        Guid? taskId,
         CancellationToken ct = default)
     {
-        var subtasks = await _taskRepository.GetSubTasks(ct);
+        var subtasks = await _taskRepository.GetSubTasks(
+            status, isOverdue, assigneeId, taskId, ct);
 
         return ResultT<(List<Subtask> subtasks, Dictionary<Guid, DateTime> dateTimes)>.Success(subtasks);
     }

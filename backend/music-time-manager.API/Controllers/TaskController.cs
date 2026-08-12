@@ -50,7 +50,7 @@ public class TaskController : ControllerBase
                 Status: t.Status,
                 IsOverdue: t.DueDate < DateTime.UtcNow && t.Status != CoreStatus.Done,
                 RecreatedFromTaskId: t.RecreatedFromTaskId,
-                Assignees: Array.Empty<UserResponseWithId>() ,  // TODO: return REAL Assignees adn Subtasks!
+                Assignees: Array.Empty<UserResponseWithId>(),
                 Subtasks:  Array.Empty<SubtaskResponse>()))
             .ToList();
         
