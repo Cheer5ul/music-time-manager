@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using music_time_manager.API.DTOs;
 using music_time_manager.API.Extensions;
@@ -29,6 +30,8 @@ public class AuthController : ControllerBase
     
     [HttpPost("register")]
     [AllowAnonymous]
+    [EnableRateLimiting("fixed")]
+    [DenyIfAuthenticated]
     public async Task<ActionResult> Register([FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken ct)
     {
@@ -44,6 +47,8 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
+    [EnableRateLimiting("fixed")]
+    [DenyIfAuthenticated]
     public async Task<ActionResult> Login([FromBody] LoginUserRequest loginUserRequest,
         CancellationToken ct)
     {
@@ -63,9 +68,10 @@ public class AuthController : ControllerBase
         
         return Ok();
     }
-
+    
     [HttpPost("logout")]
     [Authorize]
+    [EnableRateLimiting("per-user")]
     public ActionResult Logout()
     {
         HttpContext.Response.Cookies.Delete("access_token");
@@ -74,6 +80,7 @@ public class AuthController : ControllerBase
 
     [HttpGet("me")]
     [Authorize]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult<UserResponseWithId>> Me(CancellationToken ct)
     {
         var userId = User.GetUserId();

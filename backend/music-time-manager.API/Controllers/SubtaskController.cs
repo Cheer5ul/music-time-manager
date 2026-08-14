@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using music_time_manager.API.DTOs;
 using music_time_manager.Application.DTOs;
 using music_time_manager.Application.Services;
@@ -23,6 +24,7 @@ public class SubtaskController : ControllerBase
 
     [Authorize]
     [HttpGet]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult<List<SubtaskResponse>>> GetSubtasks([FromQuery] SubtaskRequestFilter request,
         CancellationToken ct)
     {
@@ -49,6 +51,7 @@ public class SubtaskController : ControllerBase
     
     [Authorize]
     [HttpPost("/tasks/{taskId:guid}/subtasks")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> CreateSubtask(Guid taskId, [FromBody] CreateSubtaskRequest subtaskRequest,
         CancellationToken ct)
     {
@@ -60,6 +63,7 @@ public class SubtaskController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id:guid}")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> UpdateSubtaskTitle(Guid id, [FromBody] UpdateSubtaskTitleRequest request,
         CancellationToken ct)
     {
@@ -71,6 +75,7 @@ public class SubtaskController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id:guid}/status")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> UpdateSubtaskStatus(Guid id, [FromQuery] UpdateStatusRequest request,
         CancellationToken ct)
     {
@@ -82,6 +87,7 @@ public class SubtaskController : ControllerBase
     
     [Authorize]
     [HttpPut("{id:guid}/assignees")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> AssignUsers(Guid id, [FromBody] AssigneesUpdateRequest request,
         CancellationToken ct)
     {
@@ -93,6 +99,7 @@ public class SubtaskController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id:guid}")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> DeleteSubtask(Guid id, CancellationToken ct)
     {
         var result = await _subtaskService.DeleteSubtask(id, ct);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using music_time_manager.API.DTOs;
 using music_time_manager.API.Extensions;
 using music_time_manager.Application.DTOs;
@@ -23,6 +24,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult<List<UserResponse>>> GetUsers(CancellationToken ct)
     {
         var result = await _userService.GetUsers(ct);
@@ -37,6 +39,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:guid}")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult<UserResponse>> GetById(Guid id, CancellationToken ct)
     {
         var result = await _userService.GetById(id, ct);
@@ -50,6 +53,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:guid}/stats")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult<UserStatsResponse>> GetStats(Guid id, CancellationToken ct)
     {
         var result = await _userService.GetStats(id, ct);
@@ -63,6 +67,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id:guid}/username")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> UpdateUsername([FromBody] UpdateUsernameRequest request,
         CancellationToken ct)
     {
@@ -77,6 +82,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPatch("{id:guid}/password")]
+    [EnableRateLimiting("per-user")]
     public async Task<ActionResult> UpdatePassword(Guid id, [FromBody] UpdatePasswordRequest request,
         CancellationToken ct)
     {
