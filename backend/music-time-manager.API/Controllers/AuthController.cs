@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         CancellationToken ct)
     {
         var result = await _userService.Create(
-            registerUserRequest.Name
+            registerUserRequest.Username
             , registerUserRequest.Password,
             ct);
         

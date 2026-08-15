@@ -3,5 +3,5 @@
 namespace music_time_manager.Application.DTOs;
 
 public record RegisterUserRequest(
-    [Required] string Name,
+    [Required] string Username,
     [Required] string Password); 
