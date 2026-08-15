@@ -159,8 +159,9 @@ app.UseCookiePolicy(new CookiePolicyOptions()
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
 app.MapControllers();
 
-app.UseRateLimiter();
 
 app.Run();
