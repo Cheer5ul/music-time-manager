@@ -151,7 +151,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict,
+    MinimumSameSitePolicy = SameSiteMode.None,
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
 });
