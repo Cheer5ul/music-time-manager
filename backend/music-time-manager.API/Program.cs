@@ -123,6 +123,17 @@ builder.Services.AddRateLimiter(options =>
     }));
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5173", "http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
@@ -155,6 +166,8 @@ app.UseCookiePolicy(new CookiePolicyOptions()
     HttpOnly = HttpOnlyPolicy.Always,
     Secure = CookieSecurePolicy.Always
 });
+
+app.UseCors("frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
