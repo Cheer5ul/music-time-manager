@@ -25,14 +25,14 @@ public class UserController : ControllerBase
     [Authorize]
     [HttpGet]
     [EnableRateLimiting("per-user")]
-    public async Task<ActionResult<List<UserResponse>>> GetUsers(CancellationToken ct)
+    public async Task<ActionResult<List<UserResponseWithId>>> GetUsers(CancellationToken ct)
     {
         var result = await _userService.GetUsers(ct);
         
         if (result.IsFailure) return _failureHandler.HandleFailure(result, HttpContext);
 
         var response = result.Value!.Select(u =>
-            new UserResponse(u.UserName)).ToList();
+            new UserResponseWithId(u.Id, u.UserName)).ToList();
         
         return Ok(response);
     }
