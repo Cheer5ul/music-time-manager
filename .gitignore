@@ -14,7 +14,7 @@ out/
 *.user
 *.user.props
 
-# EF Core migrations bundle output (если будешь генерировать)
+# EF Core migrations bundle output
 *.dll.config
 
 # === Секреты — САМОЕ ВАЖНОЕ ===
@@ -39,3 +39,29 @@ Thumbs.db
 
 # === Логи ===
 *.log
+
+# === Frontend (React/Vite) — дополнения ===
+
+# Кэш и временные файлы Vite 
+.vite-temp/
+*.tsbuildinfo
+
+# Линтер/форматтер кэш
+.eslintcache
+
+# Логи npm/yarn/pnpm 
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Локальные env-файлы для всех окружений, не только .env.local
+frontend/.env.*.local
+frontend/.env.production
+frontend/.env.development
+
+# Редакторские swap/temp файлы (если вдруг кто-то откроет в vim/др.)
+*.swp
+*~
+
+# Покрытие тестами
+frontend/coverage/
