@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { ProblemDetails } from "../types";
+import errorMessages from "../i18n/errors.ru.json";
 
 export const apiClient = axios.create({ baseURL: "https://localhost:7075", withCredentials: true });
 
@@ -15,6 +16,8 @@ apiClient.interceptors.response.use(
 export function getApiErrorMessage(error: unknown) {
   if (axios.isAxiosError<ProblemDetails>(error)) {
     const data = error.response?.data;
+    const code = data?.errors?.[0]?.code;
+    if (code && code in errorMessages) return errorMessages[code as keyof typeof errorMessages];
     return data?.detail || data?.errors?.[0]?.description || data?.title || "Не удалось выполнить запрос.";
   }
   if (error instanceof Error) return error.message;

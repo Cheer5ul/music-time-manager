@@ -1,0 +1,16 @@
+{
+  "Task.InvalidTitle": "Некорректное название задачи.",
+  "Task.InvalidDescription": "Некорректное описание задачи.",
+  "Task.InvalidDueDate": "Некорректный срок выполнения.",
+  "Task.DoesNotExist": "Задача не найдена.",
+  "Task.MustHaveAtLeastOneAssignee": "У задачи должен быть хотя бы один исполнитель.",
+  "Subtask.InvalidTitle": "Некорректное название подзадачи.",
+  "Subtask.MustHaveAtLeastOneAssignee": "У подзадачи должен быть хотя бы один исполнитель.",
+  "Subtask.DoesNotExist": "Подзадача не найдена.",
+  "User.InvalidUsername": "Некорректный логин.",
+  "User.DoesNotExist": "Пользователь не найден.",
+  "User.FailedToLogin": "Неверный логин или пароль.",
+  "User.UsernameAlreadyUsed": "Такой логин уже занят.",
+  "User.InvalidPassword": "Некорректный пароль.",
+  "User.IncorrectCurrentPassword": "Текущий пароль указан неверно."
+}
