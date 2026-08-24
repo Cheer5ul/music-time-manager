@@ -4,11 +4,9 @@ public static class UserErrors
 {
     private static class Codes
     {
-        public const string InvalidUsername = "User.InvalidName";
-        public const string NotFoundName = "User.NotFoundName";
-        public const string NotFound = "User.NotFound";
+        public const string InvalidUsername = "User.InvalidUserName";
         public const string FailedToLogin = "User.FailedToLogin";
-        public const string NameAlreadyUsed = "User.NameAlreadyUsed";
+        public const string UsernameAlreadyUsed = "User.UsernameAlreadyUsed";
         public const string DoesNotExist = "User.DoesNotExist";
         public const string InvalidPassword = "User.InvalidPassword";
         public const string IncorrectCurrentPassword = "User.IncorrectCurrentPassword";
@@ -17,33 +15,36 @@ public static class UserErrors
         new Error(Codes.InvalidUsername,
             $"Username '{username}' is invalid.",
             ErrorType.Validation); 
-    public static Error NotFoundName(string username) => 
-        new Error(Codes.NotFoundName,
-            $"User with username '{username}' is not found.",
-            ErrorType.NotFound);
-    public static Error NotFound()
-        => new Error(Codes.NotFound,
-            $"User is not found.",
-            ErrorType.NotFound);
+    
     public static Error FailedToLogin() => 
         new Error(Codes.FailedToLogin,
             $"Failed to login.",
             ErrorType.Validation);
+    
     public static Error NameAlreadyUsed(string name) =>
-        new Error(Codes.NameAlreadyUsed,
+        new Error(Codes.UsernameAlreadyUsed,
             $"User with name '{name}' already exists.",
             ErrorType.Conflict);
-
-    public static Error DoesNotExits(Guid id) =>
+    
+    public static Error DoesNotExist() =>
+        new Error(Codes.DoesNotExist,
+            $"User does not exist.",
+            ErrorType.NotFound);
+    public static Error DoesNotExist(Guid id) =>
         new Error(Codes.DoesNotExist,
             $"User with id {id} does not exist.",
             ErrorType.NotFound);
-
-    public static Error InvalidPassword(string password) =>
+    
+    public static Error DoesNotExist(string username) =>
+        new Error(Codes.DoesNotExist,
+            $"User with username '{username}' does not exist.",
+            ErrorType.NotFound);
+    
+    public static Error InvalidPassword() =>
         new Error(Codes.InvalidPassword,
-            $"Password '{password}' is invalid.",
+            $"Password is invalid.",
             ErrorType.Validation);
-
+    
     public static Error IncorrectCurrentPassword() =>
         new Error(Codes.IncorrectCurrentPassword,
             $"Current password is incorrect.",

@@ -59,7 +59,7 @@ public class TaskService : ITaskService
         Guid createdBy, string? description, CancellationToken ct = default)
     {
         var doesUserExist = await _userRepository.GetById(createdBy, ct);
-        if(doesUserExist is null) return Result.Failures([UserErrors.DoesNotExits(createdBy)]);
+        if(doesUserExist is null) return Result.Failures([UserErrors.DoesNotExist(createdBy)]);
         
         var task = Task.Create(
             title,
@@ -88,7 +88,7 @@ public class TaskService : ITaskService
         foreach (var userId in userIds)
         {
             var doesUserExist = await _userRepository.GetById(userId, ct);
-            if(doesUserExist == null) return Result.Failures([UserErrors.DoesNotExits(userId)]);
+            if(doesUserExist == null) return Result.Failures([UserErrors.DoesNotExist(userId)]);
         }
         
         var assignees = userIds

@@ -4,7 +4,7 @@ public static class SubtaskErrors
 {
     private static class Codes
     {
-        public const string InvalidTitle = "Subtask.InvalidTtile";
+        public const string InvalidTitle = "Subtask.InvalidTitle";
         public const string MustHaveAtLeastOneAssignee = "Subtask.MustHaveAtLeastOneAssignee";
         public const string DoesNotExist = "Subtask.DoesNotExist";
     } 

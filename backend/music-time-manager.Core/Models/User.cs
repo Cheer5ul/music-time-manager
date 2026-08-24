@@ -49,7 +49,7 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(password) || password.Length < MIN_PASSWORD_LENGTH)
         {
-            return Result.Result.Failures([UserErrors.InvalidPassword(password)]);
+            return Result.Result.Failures([UserErrors.InvalidPassword()]);
         }
         return Result.Result.Success;
     }
