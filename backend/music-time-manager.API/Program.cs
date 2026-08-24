@@ -121,6 +121,31 @@ builder.Services.AddRateLimiter(options =>
                 Window = TimeSpan.FromSeconds(10)
             });
     }));
+    
+    options.AddPolicy("get-stats", (httpContext =>
+    {
+        string? userId = httpContext.User.FindFirstValue("userId");
+
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            return RateLimitPartition.GetTokenBucketLimiter(
+                userId,
+                _ => new TokenBucketRateLimiterOptions()
+                {
+                    TokenLimit = 40,
+                    TokensPerPeriod = 15, 
+                    ReplenishmentPeriod = TimeSpan.FromMinutes(1)
+                });
+        }
+        
+        return RateLimitPartition.GetFixedWindowLimiter(
+            "anonymous",
+            _ => new FixedWindowRateLimiterOptions()
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10)
+            });
+    }));
 });
 
 builder.Services.AddCors(options =>

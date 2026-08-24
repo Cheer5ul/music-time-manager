@@ -53,7 +53,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:guid}/stats")]
-    [EnableRateLimiting("per-user")]
+    [EnableRateLimiting("get-stats")]
     public async Task<ActionResult<UserStatsResponse>> GetStats(Guid id, CancellationToken ct)
     {
         var result = await _userService.GetStats(id, ct);

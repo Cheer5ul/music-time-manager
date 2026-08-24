@@ -29,5 +29,44 @@ export const RegisterPage = () => <AuthPage register />;
 function TaskModals({ detail, setDetail, recreate, setRecreate }: { detail: DetailTarget; setDetail: (value: DetailTarget) => void; recreate: Task | null; setRecreate: (value: Task | null) => void }) { return <><RecreateTaskModal task={recreate} onClose={() => setRecreate(null)} /><TaskDetailsModal taskId={detail?.id ?? null} editInitially={detail?.edit} onClose={() => setDetail(null)} /></>; }
 export function TodayPage() { const query = useTasksQuery(); const [recreate, setRecreate] = useState<Task | null>(null); const [detail, setDetail] = useState<DetailTarget>(null); const tasks = query.data ?? []; const todo = tasks.filter(t => !t.isOverdue && t.status === "ToDo"); const progress = tasks.filter(t => !t.isOverdue && t.status === "InProgress"); const overdue = tasks.filter(t => t.isOverdue); const openCreate = () => window.dispatchEvent(new Event("open-new-task")); const common = { onRecreate: setRecreate, onDetails: (id: string) => setDetail({ id, edit: false }), onEdit: (id: string) => setDetail({ id, edit: true }) }; return <motion.div {...pageMotion}><PageHeader title="Сегодня" description={new Intl.DateTimeFormat("ru-RU", { weekday: "long", day: "numeric", month: "long" }).format(new Date())} action={<Button onClick={openCreate} icon={<Plus size={16} />}>Новая задача</Button>} /><State pending={query.isPending} error={query.isError}><div className="space-y-8">{todo.length ? <Section title="К работе" tasks={todo} {...common} /> : null}{progress.length ? <Section title="В работе" tasks={progress} {...common} /> : null}{overdue.length ? <Section title="Просроченные" tasks={overdue} {...common} /> : null}{!todo.length && !progress.length && !overdue.length ? <Card className="p-5 text-sm text-stone-500">Задач пока нет.</Card> : null}</div></State><TaskModals detail={detail} setDetail={setDetail} recreate={recreate} setRecreate={setRecreate} /></motion.div>; }
 export function TasksPage() { const [filter, setFilter] = useState<"all" | "active" | "done" | "overdue">("all"); const [recreate, setRecreate] = useState<Task | null>(null); const [detail, setDetail] = useState<DetailTarget>(null); const query = useTasksQuery(); const items = useMemo(() => (query.data ?? []).filter(t => filter === "active" ? t.status !== "Done" && !t.isOverdue : filter === "done" ? t.status === "Done" : filter === "overdue" ? t.isOverdue : true), [query.data, filter]); const tabs: Array<[typeof filter, string]> = [["all", "Все"], ["active", "Активные"], ["overdue", "Просроченные"], ["done", "Выполненные"]]; const common = { onRecreate: setRecreate, onDetails: (id: string) => setDetail({ id, edit: false }), onEdit: (id: string) => setDetail({ id, edit: true }) }; return <motion.div {...pageMotion}><PageHeader title="Все задачи" description="Общий список задач команды" action={<Button onClick={() => window.dispatchEvent(new Event("open-new-task"))} icon={<Plus size={16} />}>Новая задача</Button>} /><div className="mb-6 flex gap-5 border-b border-stone-200">{tabs.map(([key, label]) => <button key={key} onClick={() => setFilter(key)} className={cn("border-b-2 px-1 pb-2 text-sm", filter === key ? "border-stone-900 font-medium" : "border-transparent text-stone-500")}>{label}</button>)}</div><State pending={query.isPending} error={query.isError}>{items.length ? <Section title="Задачи" tasks={items} {...common} /> : <Card className="p-10 text-center text-sm text-stone-500">В этой категории пока нет задач.</Card>}</State><TaskModals detail={detail} setDetail={setDetail} recreate={recreate} setRecreate={setRecreate} /></motion.div>; }
-function TeamMember({ user }: { user: import("./types").User }) { const stats = useUserStatsQuery(user.id); const assignedQuery = useTasksQuery({ assigneeId: user.id }); const assigned = assignedQuery.data ?? []; const active = assignedQuery.isPending ? "считаем нагрузку..." : `${assigned.filter(t => t.status !== "Done" && !t.isOverdue).length} активн.`; const completed = stats.isPending ? "считаем статистику..." : `${stats.data?.completedTasks ?? 0} выполнено`; return <div className="flex flex-col gap-3 px-5 py-4 md:flex-row md:items-center md:gap-4"><div className="flex min-w-0 items-center gap-4"><Avatar user={user} size="lg" /><p className="truncate font-medium">{user.username}</p></div><div className="grid grid-cols-2 gap-2 text-sm text-stone-500 md:ml-auto md:flex md:items-center md:gap-4"><p>{active} · {completed}</p><p className="md:text-right">Назначено: <b className="text-stone-900">{assignedQuery.isPending ? "…" : assigned.length}</b><br />Пропущено: <b className="text-stone-900">{stats.data?.missedTasks ?? 0}</b></p></div></div>; }
-export function TeamPage() { const users = useUsersQuery(); return <motion.div {...pageMotion}><PageHeader title="Команда" description="Участники и их текущая нагрузка" /><State pending={users.isPending} error={users.isError}><div className="divide-y divide-stone-100 rounded-xl border border-stone-200 bg-white">{users.data?.map(user => <TeamMember key={user.id} user={user} />)}</div></State></motion.div>; }
+function TeamMember({ user, tasksByAssignee }: { user: import("./types").User; tasksByAssignee: Map<string, Task[]> }) {
+  const stats = useUserStatsQuery(user.id);
+  const assigned = tasksByAssignee.get(user.id) ?? [];
+  const active = `${assigned.filter(t => t.status !== "Done" && !t.isOverdue).length} активн.`;
+  const completed = stats.isPending ? "считаем статистику..." : `${stats.data?.completedTasks ?? 0} выполнено`;
+  return (
+    <div className="flex flex-col gap-3 px-5 py-4 md:flex-row md:items-center md:gap-4">
+      <div className="flex min-w-0 items-center gap-4"><Avatar user={user} size="lg" /><p className="truncate font-medium">{user.username}</p></div>
+      <div className="grid grid-cols-2 gap-2 text-sm text-stone-500 md:ml-auto md:flex md:items-center md:gap-4">
+        <p>{active} · {completed}</p>
+        <p className="md:text-right">Назначено: <b className="text-stone-900">{assigned.length}</b><br />Пропущено: <b className="text-stone-900">{stats.data?.missedTasks ?? 0}</b></p>
+      </div>
+    </div>
+  );
+}
+
+export function TeamPage() {
+  const users = useUsersQuery();
+  const tasksQuery = useTasksQuery();
+  const tasksByAssignee = useMemo(() => {
+    const map = new Map<string, Task[]>();
+    for (const task of tasksQuery.data ?? []) {
+      for (const assignee of task.assignees) {
+        if (!map.has(assignee.id)) map.set(assignee.id, []);
+        map.get(assignee.id)!.push(task);
+      }
+    }
+    return map;
+  }, [tasksQuery.data]);
+
+  return (
+    <motion.div {...pageMotion}>
+      <PageHeader title="Команда" description="Участники и их текущая нагрузка" />
+      <State pending={users.isPending} error={users.isError}>
+        <div className="divide-y divide-stone-100 rounded-xl border border-stone-200 bg-white">
+          {users.data?.map(user => <TeamMember key={user.id} user={user} tasksByAssignee={tasksByAssignee} />)}
+        </div>
+      </State>
+    </motion.div>
+  );
+}
