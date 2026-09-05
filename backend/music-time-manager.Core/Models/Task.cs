@@ -51,7 +51,7 @@ public class Task
         }
 
         if (dueDate < DateTime.UtcNow ||
-            dueDate - DateTime.UtcNow > TimeSpan.FromDays(365))
+            dueDate - DateTime.UtcNow > TimeSpan.FromDays(1095))
         {
             errors.Add(TaskErrors.InvalidDueDate(dueDate));
         }
