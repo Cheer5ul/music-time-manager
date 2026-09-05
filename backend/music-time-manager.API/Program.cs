@@ -47,6 +47,8 @@ builder.Services.AddAuthorization(options =>
         .Build();
 });
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -148,6 +150,8 @@ builder.Services.AddRateLimiter(options =>
     }));
 });
 
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("frontend", policy =>
@@ -177,6 +181,8 @@ using (var scope = app.Services.CreateScope())
         throw;
     }
 }
+
+app.MapHealthChecks("/health");
 
 if (app.Environment.IsDevelopment())
 {
