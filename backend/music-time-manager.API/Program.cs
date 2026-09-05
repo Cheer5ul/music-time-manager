@@ -156,7 +156,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("frontend", policy =>
     {
-        policy.WithOrigins("http://127.0.0.1:5173", "http://localhost:5173")
+        policy.WithOrigins(
+                "http://127.0.0.1:5173", 
+                "http://localhost:5173",
+                "https://music-time-manager-1.onrender.com")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
