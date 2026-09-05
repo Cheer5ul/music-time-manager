@@ -14,10 +14,9 @@ public class TaskEntityConfiguration : IEntityTypeConfiguration<TaskEntity>
         builder.Property(task => task.Title)
             .HasMaxLength(Task.MAX_TITLE_LENGTH)
             .IsRequired();
-        
+
         builder.Property(task => task.Description)
-            .HasMaxLength(Task.MAX_DESCRIPTION_LENGTH)
-            .IsRequired();
+            .HasMaxLength(Task.MAX_DESCRIPTION_LENGTH);
         
         builder.Property(task => task.DueDate)
             .IsRequired();

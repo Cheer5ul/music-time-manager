@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using music_time_manager.Persistence;
@@ -11,9 +12,11 @@ using music_time_manager.Persistence;
 namespace music_time_manager.Persistence.Migrations
 {
     [DbContext(typeof(MusicTimeManagerDbContext))]
-    partial class MusicTimeManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260905212319_maketaskdescriptionnullable")]
+    partial class maketaskdescriptionnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,6 +94,7 @@ namespace music_time_manager.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
