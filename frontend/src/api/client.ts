@@ -3,7 +3,10 @@ import type { ProblemDetails } from "../types";
 import errorMessages from "../i18n/errors.ru.json";
 import { toast } from "sonner";
 
-export const apiClient = axios.create({ baseURL: "https://localhost:7075", withCredentials: true });
+export const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL ?? "https://localhost:7075",
+  withCredentials: true,
+});
 
 apiClient.interceptors.response.use(
   response => response,
