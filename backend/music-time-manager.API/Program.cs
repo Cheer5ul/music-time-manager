@@ -192,7 +192,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     
-}app.UseHttpsRedirection();
+}
+app.UseExceptionHandler();
+app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions()
 {
