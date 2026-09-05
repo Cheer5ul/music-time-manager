@@ -22,6 +22,12 @@ public class GlobalExceptionHandler : IExceptionHandler
         Exception exception, 
         CancellationToken cancellationToken)
     {
+        if (exception is OperationCanceledException && httpContext.RequestAborted.IsCancellationRequested)
+        {
+            _logger.LogDebug("Request was cancelled by the client: {Path}", httpContext.Request.Path);
+            return true;
+        }
+        
         _logger.LogError(exception, "Unhandled exception occurred");
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
