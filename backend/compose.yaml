@@ -1,0 +1,31 @@
+﻿services:
+  music-time-manager.api:
+    image: music-time-manager.api
+    build:
+      context: .
+      dockerfile: music-time-manager.API/Dockerfile
+
+  music-time-manager.application:
+    image: music-time-manager.application
+    build:
+      context: .
+      dockerfile: music-time-manager.Application/Dockerfile
+
+  music-time-manager.core:
+    image: music-time-manager.core
+    build:
+      context: .
+      dockerfile: music-time-manager.Core/Dockerfile
+
+  music-time-manager.infrastructure:
+    image: music-time-manager.infrastructure
+    build:
+      context: .
+      dockerfile: music-time-manager.Infrastructure/Dockerfile
+
+  music-time-manager.persistence:
+    image: music-time-manager.persistence
+    build:
+      context: .
+      dockerfile: music-time-manager.Persistence/Dockerfile
+
