@@ -182,7 +182,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health").AllowAnonymous();
 
 if (app.Environment.IsDevelopment())
 {
