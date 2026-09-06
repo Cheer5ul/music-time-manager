@@ -8,7 +8,7 @@ A task manager for a small music production team — organizing weekly work thro
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?logo=postgresql&logoColor=white)](#)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](#)
 [![React](https://img.shields.io/badge/React-TypeScript-61DAFB?logo=react&logoColor=black)](#)
-[![TanStack Query](https://img.shields.io/badge/TanStack%20Query-FF4154?logo=reactquery&logoColor=white)](#)
+[![TanStack Query](https://img.shields.io/badge/TanStack%20Query-FF4154)](#)
 [![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white)](#)
 
 **[Live demo →](https://music-time-manager-1.onrender.com/)**
