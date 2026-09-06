@@ -110,6 +110,8 @@ docs/
 
 Swagger UI is available automatically in the Development environment at `/swagger` once the API is running.
 
+![Swagger UI](docs/screenshots/swagger.png)
+
 ## 📚 Documentation
 
 | Doc | Covers |
