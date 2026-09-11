@@ -1,0 +1,20 @@
+{
+  "appName": "Tasks",
+  "nav": { "today": "Today", "tasks": "All tasks", "team": "Team" },
+  "theme": { "toLight": "Use light theme", "toDark": "Use dark theme" },
+  "language": { "switch": "Switch language", "en": "EN", "ru": "RU" },
+  "common": {
+    "loading": "Loading...", "cancel": "Cancel", "save": "Save", "saving": "Saving...", "add": "Add", "adding": "Adding...", "create": "Create", "creating": "Creating...", "delete": "Delete", "edit": "Edit", "close": "Close", "details": "Details", "assignees": "Assignees", "optional": "optional", "title": "Title", "description": "Description", "dueDate": "Due date", "status": "Status", "created": "Created", "overdue": "Overdue", "notOverdue": "Not overdue", "completed": "Completed", "notAssigned": "No assignees assigned.", "assign": "Assign", "unassigned": "Unassigned", "search": "Search"
+  },
+  "status": { "todo": "To do", "inProgress": "In progress", "done": "Done", "start": "Start working", "complete": "Complete", "recreate": "Recreate" },
+  "auth": {
+    "loginTitle": "Sign in", "registerTitle": "Create account", "username": "Username", "password": "Password", "login": "Sign in", "register": "Create account", "pleaseWait": "Please wait...", "noAccount": "Don't have an account?", "hasAccount": "Already have an account?", "signUp": "Sign up", "signIn": "Sign in"
+  },
+  "today": { "title": "Today", "empty": "No tasks yet.", "toWork": "To work", "inProgress": "In progress", "overdue": "Overdue" },
+  "tasks": { "title": "All tasks", "description": "The team's full task list", "all": "All", "active": "Active", "overdue": "Overdue", "done": "Completed", "list": "Tasks", "empty": "There are no tasks in this category yet." },
+  "team": { "title": "Team", "description": "Members and their current workload", "active": "{{count}} active", "completed": "{{count}} completed", "assigned": "Assigned", "missed": "Missed", "calculatingLoad": "calculating workload...", "calculatingStats": "calculating statistics..." },
+  "task": {
+    "new": "New task", "recreate": "Recreate task", "details": "Task details", "newDueDate": "New due date", "noTitle": "Untitled", "hasSubtasks": "Has subtasks", "subtasksProgress": "{{completed}}/{{total}} subtasks", "noSubtasks": "No subtasks yet.", "subtasks": "Subtasks", "newSubtask": "New subtask", "addSubtask": "Add subtask", "editSubtask": "Edit subtask", "deleteSubtask": "Delete subtask", "deleteSubtaskConfirm": "Delete this subtask?", "deleteTaskConfirm": "Delete this task and all its subtasks?", "taskCreateMissingId": "Task was created, but the server did not return its ID for assigning assignees."
+  },
+  "errors": { "load": "Loading failed. Please refresh the page.", "rateLimit": "Too many requests. Please wait a moment and try again.", "rateLimitRetry": "Too many requests. Try again in {{count}} seconds." }
+}

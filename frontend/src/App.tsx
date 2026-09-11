@@ -3,15 +3,17 @@ import { AnimatePresence } from "framer-motion";
 import { AppShell, ThemeInitializer, ThemeToaster } from "./components";
 import { LoginPage, RegisterPage, TasksPage, TodayPage, TeamPage } from "./pages";
 import { useMeQuery } from "./api/hooks";
+import { useTranslation } from "react-i18next";
 
 function AuthGuard() {
+  const { t } = useTranslation();
   const session = useMeQuery();
-  if (session.isPending) return <main className="grid min-h-screen place-items-center text-sm text-stone-500">Загрузка...</main>;
+  if (session.isPending) return <main className="grid min-h-screen place-items-center text-sm text-stone-500">{t("common.loading")}</main>;
   if (session.isError) return <Navigate to="/login" replace />;
   return <AppShell />;
 }
 
-function PublicRoute({ children }: { children: React.ReactNode }) { const session = useMeQuery(); if (session.isPending) return <main className="grid min-h-screen place-items-center text-sm text-stone-500">Загрузка...</main>; return session.isSuccess ? <Navigate to="/today" replace /> : <>{children}</>; }
+function PublicRoute({ children }: { children: React.ReactNode }) { const { t } = useTranslation(); const session = useMeQuery(); if (session.isPending) return <main className="grid min-h-screen place-items-center text-sm text-stone-500">{t("common.loading")}</main>; return session.isSuccess ? <Navigate to="/today" replace /> : <>{children}</>; }
 
 export function App() {
   const location = useLocation();

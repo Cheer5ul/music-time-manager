@@ -2,11 +2,9 @@ import axios from "axios";
 import type { ProblemDetails } from "../types";
 import errorMessages from "../i18n/errors.ru.json";
 import { toast } from "sonner";
+import i18n from "../i18n";
 
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "https://localhost:7075",
-  withCredentials: true,
-});
+export const apiClient = axios.create({ baseURL: "https://localhost:7075", withCredentials: true });
 
 apiClient.interceptors.response.use(
   response => response,
@@ -16,8 +14,8 @@ apiClient.interceptors.response.use(
       const retryAfter = Number(error.response.headers?.["retry-after"]);
       toast.error(
         Number.isFinite(retryAfter) && retryAfter > 0
-          ? `Слишком много запросов. Попробуйте снова через ${retryAfter} секунд.`
-          : "Слишком много запросов. Подождите немного и попробуйте снова. Перезагрузите страницу",
+          ? i18n.t("errors.rateLimitRetry", { count: retryAfter })
+          : i18n.t("errors.rateLimit"),
         { id: "rate-limit" },
       );
     }

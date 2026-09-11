@@ -4,6 +4,7 @@ import { assignTaskUsers, createTask, deleteTask, getTask, getTasks, recreateTas
 import { assignSubtaskUsers, createSubtask, deleteSubtask, updateSubtaskStatus, updateSubtaskTitle } from "./subtasks";
 import { getUserStats, getUsers } from "./users";
 import type { TaskStatus, User } from "../types";
+import i18n from "../i18n";
 
 const tasksKey = ["tasks"] as const;
 const taskKey = (id: string) => ["tasks", "detail", id] as const;
@@ -22,7 +23,7 @@ export function useCreateTaskMutation() { const queryClient = useQueryClient(); 
     const createdByUser = await getTasks({ createdBy: currentUser.id });
     created = createdByUser.filter(item => !beforeIds.has(item.id)).sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))[0];
   }
-  if (assigneeIds.length && !created?.id) throw new Error("Задача создана, но сервер не вернул её идентификатор для назначения исполнителей.");
+  if (assigneeIds.length && !created?.id) throw new Error(i18n.t("task.taskCreateMissingId"));
   if (assigneeIds.length && created) await assignTaskUsers(created.id, assigneeIds);
   return created;
 }, onSuccess: () => queryClient.invalidateQueries({ queryKey: tasksKey }) }); }

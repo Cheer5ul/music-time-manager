@@ -1,0 +1,20 @@
+{
+  "appName": "Задачи",
+  "nav": { "today": "Сегодня", "tasks": "Все задачи", "team": "Команда" },
+  "theme": { "toLight": "Включить светлую тему", "toDark": "Включить тёмную тему" },
+  "language": { "switch": "Сменить язык", "en": "EN", "ru": "RU" },
+  "common": {
+    "loading": "Загрузка...", "cancel": "Отмена", "save": "Сохранить", "saving": "Сохраняем...", "add": "Добавить", "adding": "Добавляем...", "create": "Создать", "creating": "Создаём...", "delete": "Удалить", "edit": "Редактировать", "close": "Закрыть", "details": "Подробнее", "assignees": "Исполнители", "optional": "необязательно", "title": "Название", "description": "Описание", "dueDate": "Срок", "status": "Статус", "created": "Создано", "overdue": "Просрочено", "notOverdue": "Не просрочено", "completed": "Выполнено", "notAssigned": "Исполнители не назначены.", "assign": "Назначить", "unassigned": "Не назначено", "search": "Поиск"
+  },
+  "status": { "todo": "К выполнению", "inProgress": "В работе", "done": "Готово", "start": "Взяться за работу", "complete": "Выполнить", "recreate": "Пересоздать" },
+  "auth": {
+    "loginTitle": "Войдите в аккаунт", "registerTitle": "Создать аккаунт", "username": "Логин", "password": "Пароль", "login": "Войти", "register": "Создать аккаунт", "pleaseWait": "Подождите...", "noAccount": "Нет аккаунта?", "hasAccount": "Уже есть аккаунт?", "signUp": "Зарегистрироваться", "signIn": "Войти"
+  },
+  "today": { "title": "Сегодня", "empty": "Задач пока нет.", "toWork": "К работе", "inProgress": "В работе", "overdue": "Просроченные" },
+  "tasks": { "title": "Все задачи", "description": "Общий список задач команды", "all": "Все", "active": "Активные", "overdue": "Просроченные", "done": "Выполненные", "list": "Задачи", "empty": "В этой категории пока нет задач." },
+  "team": { "title": "Команда", "description": "Участники и их текущая нагрузка", "active": "{{count}} активн.", "completed": "{{count}} выполнено", "assigned": "Назначено", "missed": "Пропущено", "calculatingLoad": "считаем нагрузку...", "calculatingStats": "считаем статистику..." },
+  "task": {
+    "new": "Новая задача", "recreate": "Пересоздать задачу", "details": "Детали задачи", "newDueDate": "Новый срок", "noTitle": "Без названия", "hasSubtasks": "Есть подзадачи", "subtasksProgress": "{{completed}}/{{total}} подзадач", "noSubtasks": "Подзадач пока нет.", "subtasks": "Подзадачи", "newSubtask": "Новая подзадача", "addSubtask": "Добавить подзадачу", "editSubtask": "Редактировать подзадачу", "deleteSubtask": "Удалить подзадачу", "deleteSubtaskConfirm": "Удалить подзадачу?", "deleteTaskConfirm": "Удалить задачу и все её подзадачи?", "taskCreateMissingId": "Задача создана, но сервер не вернул её идентификатор для назначения исполнителей."
+  },
+  "errors": { "load": "Ошибка загрузки. Попробуйте обновить страницу.", "rateLimit": "Слишком много запросов. Подождите немного и попробуйте снова.", "rateLimitRetry": "Слишком много запросов. Попробуйте снова через {{count}} секунд." }
+}

@@ -16,9 +16,11 @@
     "axios": "^1.10.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.0",
+    "i18next": "^26.4.2",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-i18next": "^17.0.13",
     "react-router-dom": "^7.6.3",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.3.1"
