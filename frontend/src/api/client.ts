@@ -4,7 +4,9 @@ import errorMessages from "../i18n/errors.ru.json";
 import { toast } from "sonner";
 import i18n from "../i18n";
 
-export const apiClient = axios.create({ baseURL: "https://localhost:7075", withCredentials: true });
+const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "https://localhost:7075";
+
+export const apiClient = axios.create({ baseURL: apiBaseUrl, withCredentials: true });
 
 apiClient.interceptors.response.use(
   response => response,
