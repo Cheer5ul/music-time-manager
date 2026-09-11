@@ -16,5 +16,5 @@
   "task": {
     "new": "New task", "recreate": "Recreate task", "details": "Task details", "newDueDate": "New due date", "noTitle": "Untitled", "hasSubtasks": "Has subtasks", "subtasksProgress": "{{completed}}/{{total}} subtasks", "noSubtasks": "No subtasks yet.", "subtasks": "Subtasks", "newSubtask": "New subtask", "addSubtask": "Add subtask", "editSubtask": "Edit subtask", "deleteSubtask": "Delete subtask", "deleteSubtaskConfirm": "Delete this subtask?", "deleteTaskConfirm": "Delete this task and all its subtasks?", "taskCreateMissingId": "Task was created, but the server did not return its ID for assigning assignees."
   },
-  "errors": { "load": "Loading failed. Please refresh the page.", "rateLimit": "Too many requests. Please wait a moment and try again.", "rateLimitRetry": "Too many requests. Try again in {{count}} seconds." }
+  "errors": { "load": "Loading failed. Please refresh the page.", "request": "Unable to complete the request.", "network": "Unable to reach the server. Check your connection and try again.", "rateLimit": "Too many requests. Please wait a moment and try again.", "rateLimitRetry": "Too many requests. Try again in {{count}} seconds." }
 }

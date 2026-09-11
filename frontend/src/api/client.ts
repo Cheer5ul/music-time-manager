@@ -29,8 +29,10 @@ export function getApiErrorMessage(error: unknown) {
     const data = error.response?.data;
     const code = data?.errors?.[0]?.code;
     if (code && code in errorMessages) return errorMessages[code as keyof typeof errorMessages];
-    return data?.detail || data?.errors?.[0]?.description || data?.title || "Не удалось выполнить запрос.";
+    const serverMessage = data?.detail || data?.errors?.[0]?.description || data?.title;
+    if (serverMessage) return serverMessage;
+    return error.response ? i18n.t("errors.request") : i18n.t("errors.network");
   }
   if (error instanceof Error) return error.message;
-  return "Не удалось выполнить запрос.";
+  return i18n.t("errors.request");
 }
