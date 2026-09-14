@@ -29,4 +29,4 @@ export interface Task {
 }
 
 export interface UserStats { completedTasks: number; missedTasks: number; }
-export interface ProblemDetails { title?: string; detail?: string; status?: number; errors?: Array<{ code: string; description: string }>; }
+export interface ProblemDetails { type?: string; title?: string; detail?: string; status?: number; errors?: Array<{ code: string; description: string }>; }

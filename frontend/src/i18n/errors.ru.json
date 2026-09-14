@@ -8,6 +8,7 @@
   "Subtask.MustHaveAtLeastOneAssignee": "У подзадачи должен быть хотя бы один исполнитель.",
   "Subtask.DoesNotExist": "Подзадача не найдена.",
   "User.InvalidUsername": "Некорректный логин.",
+  "User.InvalidUserName": "Некорректный логин.",
   "User.DoesNotExist": "Пользователь не найден.",
   "User.FailedToLogin": "Неверный логин или пароль.",
   "User.UsernameAlreadyUsed": "Такой логин уже занят.",

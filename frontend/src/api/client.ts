@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { ProblemDetails } from "../types";
-import errorMessages from "../i18n/errors.ru.json";
+import errorMessagesRu from "../i18n/errors.ru.json";
+import errorMessagesEn from "../i18n/errors.en.json";
 import { toast } from "sonner";
 import i18n from "../i18n";
 
@@ -29,8 +30,10 @@ apiClient.interceptors.response.use(
 export function getApiErrorMessage(error: unknown) {
   if (axios.isAxiosError<ProblemDetails>(error)) {
     const data = error.response?.data;
-    const code = data?.errors?.[0]?.code;
-    if (code && code in errorMessages) return errorMessages[code as keyof typeof errorMessages];
+    const code = data?.errors?.[0]?.code ?? data?.type;
+    const messages = i18n.language.startsWith("ru") ? errorMessagesRu : errorMessagesEn;
+    if (code && code in messages) return messages[code as keyof typeof messages];
+    if (code && code in errorMessagesEn) return errorMessagesEn[code as keyof typeof errorMessagesEn];
     const serverMessage = data?.detail || data?.errors?.[0]?.description || data?.title;
     if (serverMessage) return serverMessage;
     return error.response ? i18n.t("errors.request") : i18n.t("errors.network");
