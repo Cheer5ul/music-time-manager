@@ -1,0 +1,17 @@
+{
+  "Task.InvalidTitle": "Please enter a valid task title.",
+  "Task.InvalidDescription": "Please enter a valid task description.",
+  "Task.InvalidDueDate": "Please choose a valid due date.",
+  "Task.DoesNotExist": "Task not found.",
+  "Task.MustHaveAtLeastOneAssignee": "A task must have at least one assignee.",
+  "Subtask.InvalidTitle": "Please enter a valid subtask title.",
+  "Subtask.MustHaveAtLeastOneAssignee": "A subtask must have at least one assignee.",
+  "Subtask.DoesNotExist": "Subtask not found.",
+  "User.InvalidUsername": "Please enter a valid username.",
+  "User.InvalidUserName": "Please enter a valid username.",
+  "User.DoesNotExist": "User not found.",
+  "User.FailedToLogin": "Incorrect username or password.",
+  "User.UsernameAlreadyUsed": "This username is already in use.",
+  "User.InvalidPassword": "Please enter a valid password.",
+  "User.IncorrectCurrentPassword": "The current password is incorrect."
+}
