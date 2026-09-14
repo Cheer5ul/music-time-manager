@@ -8,7 +8,9 @@
   },
   "status": { "todo": "К выполнению", "inProgress": "В работе", "done": "Готово", "start": "Взяться за работу", "complete": "Выполнить", "recreate": "Пересоздать" },
   "auth": {
-    "loginTitle": "Войдите в аккаунт", "registerTitle": "Создать аккаунт", "username": "Логин", "password": "Пароль", "login": "Войти", "register": "Создать аккаунт", "pleaseWait": "Подождите...", "noAccount": "Нет аккаунта?", "hasAccount": "Уже есть аккаунт?", "signUp": "Зарегистрироваться", "signIn": "Войти"
+    "loginTitle": "Войдите в аккаунт", "registerTitle": "Создать аккаунт", "username": "Логин", "password": "Пароль", "login": "Войти", "register": "Создать аккаунт", "pleaseWait": "Подождите...", "noAccount": "Нет аккаунта?", "hasAccount": "Уже есть аккаунт?", "signUp": "Зарегистрироваться", "signIn": "Войти",
+      "showPassword": "Показать пароль",
+      "hidePassword": "Скрыть пароль"
   },
   "today": { "title": "Сегодня", "empty": "Задач пока нет.", "toWork": "К работе", "inProgress": "В работе", "overdue": "Просроченные" },
   "tasks": { "title": "Все задачи", "description": "Общий список задач команды", "all": "Все", "active": "Активные", "overdue": "Просроченные", "done": "Выполненные", "list": "Задачи", "empty": "В этой категории пока нет задач." },
