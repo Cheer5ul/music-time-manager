@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
     
     [HttpPost("register")]
     [AllowAnonymous]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("auth")]
     [DenyIfAuthenticated]
     public async Task<ActionResult> Register([FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken ct)
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("auth")]
     [DenyIfAuthenticated]
     public async Task<ActionResult> Login([FromBody] LoginUserRequest loginUserRequest,
         CancellationToken ct)

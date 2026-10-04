@@ -5,6 +5,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using music_time_manager;
@@ -92,13 +93,7 @@ builder.Services.AddRateLimiter(options =>
             await context.HttpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken: token);
         }
     };
-
-    options.AddFixedWindowLimiter("fixed", cfg =>
-    {
-        cfg.PermitLimit = 5;
-        cfg.Window = TimeSpan.FromSeconds(10);
-    });
-
+    
     options.AddPolicy("per-user", (httpContext =>
     {
         string? userId = httpContext.User.FindFirstValue("userId");
@@ -148,6 +143,15 @@ builder.Services.AddRateLimiter(options =>
                 Window = TimeSpan.FromSeconds(10)
             });
     }));
+    
+    options.AddPolicy("auth", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10)
+            }));
 });
 
 
@@ -167,6 +171,15 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+var forwardedOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+forwardedOptions.KnownNetworks.Clear();
+forwardedOptions.KnownProxies.Clear();
+
+app.UseForwardedHeaders(forwardedOptions);
 
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
