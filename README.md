@@ -10,7 +10,7 @@ A task manager for a small music production team — tasks, subtasks, multiple a
 ![TanStack Query](https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge)
 ![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-**[🔗 Live demo](https://music-time-manager-1.onrender.com/)** — currently Russian-only, English UI is on the roadmap.
+**[🔗 Live demo](https://music-time-manager-1.onrender.com/)** - check out the hosted website here!
 
 ## 📋 Table of Contents
 
@@ -25,9 +25,9 @@ A task manager for a small music production team — tasks, subtasks, multiple a
 
 ## 🔍 Overview
 
-A private task manager for a 2–10 person team. `Task` is the primary entity — not `Project`, a deliberate scope decision for v1. Tasks split into subtasks, and both support multiple assignees through proper many-to-many relations.
+A private task manager for a 2–10 person team. `Task` is the primary entity, which is split into subtasks, and both support multiple assignees through proper many-to-many relations.
 
-Every non-obvious design decision — including the ones that got reversed mid-project after more thought — is written down in `/docs` before the code, not reverse-engineered from it afterward.
+Every non-obvious design decision is written down in `/docs` before the code.
 
 ## ✨ Features
 
@@ -37,13 +37,13 @@ Every non-obvious design decision — including the ones that got reversed mid-p
 - Result pattern for expected failures instead of exceptions; a global `IExceptionHandler` for the rest
 
 ### 🔐 Authentication & Security
-- JWT stored in an `HttpOnly`, `Secure`, `SameSite` cookie — never exposed to client-side JS
-- Rate limiting with a clear split between "not logged in" (401) and "slow down" (429) — the second one never touches the session
+- JWT stored in an `HttpOnly`, `Secure`, `SameSite` cookie - never exposed to client-side JS
+- Rate limiting: per-user token bucket for authenticated requests, fixed window for anonymous ones. Hitting the limit returns 429 and never logs you out.
 
 ### ✅ Domain Design
-- Overdue status is computed on every read (`dueDate < now && status != Done`), never stored — no background job to keep in sync
-- Statistics (completed/missed) are aggregate queries, not counter columns — nothing to desync
-- Recreating a missed task creates a new row linked back to the original via a self-referencing FK — history stays untouched
+- Overdue status is computed on every read (`dueDate < now && status != Done`), never stored - no background job to keep in sync
+- Statistics (completed/missed) are aggregate queries, not counter columns - nothing to desync
+- Recreating a missed task creates a new row linked back to the original via a self-referencing FK - history stays untouched
 - Errors carry a stable code (`Task.DoesNotExist`, `User.UsernameAlreadyUsed`, ...) alongside the message, so the frontend can localize without parsing English text
 
 ### 🖥️ Frontend
@@ -124,7 +124,7 @@ Documentation in Russian language is available [here](docs/ru).
 
 ## 🗺️ Roadmap
 
-- [ ] English UI
+- [x] English UI
 - [ ] Telegram bot notifications for due/overdue tasks
 - [ ] Structured logging with Serilog
 - [ ] Automated tests
