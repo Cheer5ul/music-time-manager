@@ -4,7 +4,7 @@
   "theme": { "toLight": "Use light theme", "toDark": "Use dark theme" },
   "language": { "switch": "Switch language", "en": "EN", "ru": "RU" },
   "common": {
-    "loading": "Loading...", "cancel": "Cancel", "save": "Save", "saving": "Saving...", "add": "Add", "adding": "Adding...", "create": "Create", "creating": "Creating...", "delete": "Delete", "edit": "Edit", "close": "Close", "details": "Details", "assignees": "Assignees", "optional": "optional", "title": "Title", "description": "Description", "dueDate": "Due date", "status": "Status", "created": "Created", "overdue": "Overdue", "notOverdue": "Not overdue", "completed": "Completed", "notAssigned": "No assignees assigned.", "assign": "Assign", "unassigned": "Unassigned", "search": "Search"
+    "loading": "Server is waking up (Render free tier). This may take around 30–60 seconds. Thank you for your patience!", "cancel": "Cancel", "save": "Save", "saving": "Saving...", "add": "Add", "adding": "Adding...", "create": "Create", "creating": "Creating...", "delete": "Delete", "edit": "Edit", "close": "Close", "details": "Details", "assignees": "Assignees", "optional": "optional", "title": "Title", "description": "Description", "dueDate": "Due date", "status": "Status", "created": "Created", "overdue": "Overdue", "notOverdue": "Not overdue", "completed": "Completed", "notAssigned": "No assignees assigned.", "assign": "Assign", "unassigned": "Unassigned", "search": "Search"
   },
   "status": { "todo": "To do", "inProgress": "In progress", "done": "Done", "start": "Start working", "complete": "Complete", "recreate": "Recreate" },
   "auth": {
