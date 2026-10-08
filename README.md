@@ -83,10 +83,20 @@ docs/
 ```
 
 ## 🖼️ Screenshots
-![Today](docs/screenshots/today.png)
-![Create](docs/screenshots/create.png)
-![Mobile1](docs/screenshots/mobile1.jpg)
-![Mobile2](docs/screenshots/mobile2.jpg)
+
+<p align="center">
+  <img src="docs/screenshots/today.png" width="800" alt="Today">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/create.png" width="800" alt="Create">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/mobile1.jpg" width="250" alt="Mobile 1">
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/mobile2.jpg" width="250" alt="Mobile 2">
+</p>
 
 ## 🚀 Getting Started
 
