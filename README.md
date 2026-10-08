@@ -82,6 +82,10 @@ docs/
 └── ru/                                  # Same, in Russian
 ```
 
+## 🖼️ Screenshots
+![Today](docs/today.png)
+![Create](docs/create.png)
+
 ## 🚀 Getting Started
 
 **Prerequisites**
