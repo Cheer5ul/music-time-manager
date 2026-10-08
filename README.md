@@ -83,8 +83,10 @@ docs/
 ```
 
 ## 🖼️ Screenshots
-![Today](docs/today.png)
-![Create](docs/create.png)
+![Today](docs/screenshots/today.png)
+![Create](docs/screenshots/create.png)
+![Mobile1](docs/screenshots/mobile1.jpg)
+![Mobile2](docs/screenshots/mobile2.jpg)
 
 ## 🚀 Getting Started
 
