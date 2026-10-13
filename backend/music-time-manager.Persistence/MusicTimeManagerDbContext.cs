@@ -15,6 +15,7 @@ public class MusicTimeManagerDbContext : DbContext
     public DbSet<SubtaskEntity> Subtasks { get; set; }
     public DbSet<TaskAssigneeEntity> TaskAssignees { get; set; }
     public DbSet<SubtaskAssigneeEntity> SubtaskAssignees { get; set; }
+    public DbSet<TelegramLinkEntity> TelegramLinks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +24,7 @@ public class MusicTimeManagerDbContext : DbContext
         modelBuilder.ApplyConfiguration(new SubtaskEntityConfiguration());
         modelBuilder.ApplyConfiguration(new TaskAssigneeEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SubtaskAssigneeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new TelegramLinkEntityConfiguration());
         
         base.OnModelCreating(modelBuilder);
     }

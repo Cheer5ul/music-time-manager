@@ -117,6 +117,19 @@ namespace music_time_manager.Persistence.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("music_time_manager.Persistence.Entities.TelegramLinkEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "ChatId");
+
+                    b.ToTable("TelegramLinks");
+                });
+
             modelBuilder.Entity("music_time_manager.Persistence.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
