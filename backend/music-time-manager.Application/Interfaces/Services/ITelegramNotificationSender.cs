@@ -3,4 +3,5 @@
 public interface ITelegramNotificationSender
 {
     Task SendTextAsync(long chatId, string text, CancellationToken ct = default);
+    string BuildStartLink(string token);
 }
