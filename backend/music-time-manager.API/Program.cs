@@ -70,6 +70,8 @@ builder.Services.AddScoped<IFailureHandler, FailureHandler>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+builder.Services.AddScoped<ITelegramLinkService, TelegramLinkService>();
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddTelegramService(builder.Configuration);
