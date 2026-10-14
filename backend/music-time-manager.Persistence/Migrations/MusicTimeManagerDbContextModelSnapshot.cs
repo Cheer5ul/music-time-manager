@@ -152,6 +152,24 @@ namespace music_time_manager.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("music_time_manager.Persistence.TelegramLinkTokenEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("TelegramLinkTokens");
+                });
+
             modelBuilder.Entity("music_time_manager.Persistence.Entities.SubtaskAssigneeEntity", b =>
                 {
                     b.HasOne("music_time_manager.Persistence.Entities.SubtaskEntity", "Subtask")
