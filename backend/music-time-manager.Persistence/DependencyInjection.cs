@@ -33,6 +33,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITaskRepository, TaskRepository>();
+        services.AddScoped<ITelegramRepository, TelegramRepository>();
         
         return services;
     }
