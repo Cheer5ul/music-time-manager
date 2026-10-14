@@ -16,7 +16,7 @@ public static class TelegramServiceExtensions
         services.AddSingleton<ITelegramBotClient>(serviceProvider =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<TelegramOptions>>().Value;
-            return new TelegramBotClient(options.Token);
+            return new TelegramBotClient(options.BotToken);
         });
 
         services.AddScoped<ITelegramNotificationSender, TelegramNotificationSender>();

@@ -2,5 +2,6 @@
 
 public class TelegramOptions
 {
-    public string Token { get; set; } = string.Empty;
+    public string BotToken { get; init; } = string.Empty;
+    public string BotUsername { get; init; } = string.Empty;
 }
