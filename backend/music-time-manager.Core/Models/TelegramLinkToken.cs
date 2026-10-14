@@ -1,9 +1,11 @@
-﻿using music_time_manager.Core.Result;
+﻿using music_time_manager.Core.Errors;
+using music_time_manager.Core.Result;
 
 namespace music_time_manager.Core.Models;
 
 public class TelegramLinkToken
 {
+    public const int LINK_TOKEN_EXPIRES_AFTER_MINUTES = 10;
     public Guid UserId { get; private set; }
     public string Token { get; private set; }
     public DateTime ExpiresAt { get; private set; }
@@ -17,6 +19,32 @@ public class TelegramLinkToken
 
     public static ResultT<TelegramLinkToken> Create(Guid userId)
     {
+        string token = GenerateToken(userId);
+
+        DateTime expiresAt = DateTime.UtcNow + TimeSpan.FromMinutes(LINK_TOKEN_EXPIRES_AFTER_MINUTES);
+
+        var tgLinkToken = new TelegramLinkToken(userId, token, expiresAt);
+        return ResultT<TelegramLinkToken>.Success(tgLinkToken);
+    }
+
+    public static TelegramLinkToken Reconstitute(Guid userId, string token, DateTime expiresAt)
+    {
+        return new TelegramLinkToken(userId, token, expiresAt);
+    }
+
+    public ResultT<string> UpdateToken(TelegramLinkToken linkToken)
+    {
+        if (DateTime.UtcNow - linkToken.ExpiresAt < TimeSpan.FromMinutes(LINK_TOKEN_EXPIRES_AFTER_MINUTES))
+        {
+            return ResultT<string>.Failures([TelegramErrors.TokenStillValid()]);
+        }
+        
+        var token = GenerateToken(linkToken.UserId);
+        return ResultT<string>.Success(token);
+    }
+    
+    private static string GenerateToken(Guid userId)
+    {
         string token = string.Empty;
         Random random = new Random();
         int[] ints = Enumerable.Repeat(0, 4).Select(i => random.Next(0, 100)).ToArray();
@@ -26,10 +54,6 @@ public class TelegramLinkToken
             token = token + ints[i] + firstFivChar[i];
         }
 
-        DateTime expiresAt = DateTime.UtcNow + TimeSpan.FromMinutes(10);
-
-        var tgLinkToken = new TelegramLinkToken(userId, token, expiresAt);
-        return ResultT<TelegramLinkToken>.Success(tgLinkToken);
+        return token;
     }
-    
 }
