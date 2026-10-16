@@ -29,15 +29,15 @@ public class TelegramLinkService : ITelegramLinkService
         if(doesUserExist == null) return ResultT<string>.Failures([UserErrors.DoesNotExist(userId)]);
         
         var checkTgLinkToken = await _tgRepository.GetLinkTokenByUserId(userId, ct);
-        if (checkTgLinkToken != null && DateTime.UtcNow - checkTgLinkToken.ExpiresAt >
-            TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES) /* TODO:  AND CHAT WITH BOT NOT STARTED YET*/)
+        if (checkTgLinkToken != null && DateTime.UtcNow - checkTgLinkToken.ExpiresAt <
+            TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES)) /* TODO:  AND CHAT WITH BOT NOT STARTED YET*/
         {
             return ResultT<string>.Failures([TelegramErrors.TelegramRegistrationLinkStillValid(
                 _tgNotificationSender.BuildStartLink(checkTgLinkToken.Token))]);
         }
         
-        if (checkTgLinkToken != null && DateTime.UtcNow - checkTgLinkToken.ExpiresAt <
-                 TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES))
+        if (checkTgLinkToken != null && DateTime.UtcNow - checkTgLinkToken.ExpiresAt >
+            TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES))
         {
             var token = await UpdateLinkToken(checkTgLinkToken, ct); 
             if(token.IsFailure) return ResultT<string>.Failures(token.Errors);
@@ -60,7 +60,7 @@ public class TelegramLinkService : ITelegramLinkService
         var updateResult = linkToken.UpdateToken(linkToken);
         if (updateResult.IsFailure) return ResultT<string>.Failures(updateResult.Errors);
         
-        await _tgRepository.UpdateLinkToken(linkToken, ct);
+        await _tgRepository.UpdateLinkToken(linkToken.UserId, updateResult.Value!, ct);
         
         return ResultT<string>.Success(updateResult.Value!);
     }

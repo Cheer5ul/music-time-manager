@@ -7,5 +7,5 @@ public interface ITelegramRepository
 {
     Task<TelegramLinkToken?> GetLinkTokenByUserId(Guid userId, CancellationToken ct);
     Task CreateTelegramLinkToken(TelegramLinkToken tgLinkToken, CancellationToken ct);
-    Task UpdateLinkToken(TelegramLinkToken tgLinkToken, CancellationToken ct);
+    Task UpdateLinkToken(Guid userId, string newToken, CancellationToken ct);
 }

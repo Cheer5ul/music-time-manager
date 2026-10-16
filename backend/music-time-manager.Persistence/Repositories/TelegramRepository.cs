@@ -39,12 +39,14 @@ public class TelegramRepository : ITelegramRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateLinkToken(TelegramLinkToken tgLinkToken, CancellationToken ct)
+    public async Task UpdateLinkToken(Guid userId, string newToken, CancellationToken ct)
     {
         await _dbContext.TelegramLinkTokens
-            .Where(e => e.UserId == tgLinkToken.UserId)
+            .Where(e => e.UserId == userId)
             .ExecuteUpdateAsync(
-                s => s.SetProperty(e => e.Token, tgLinkToken.Token),
+                s => s.SetProperty(e => e.Token, newToken)
+                    .SetProperty(e => e.ExpiresAt, 
+                        DateTime.UtcNow + TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES)),
                 ct);
     }
 }
