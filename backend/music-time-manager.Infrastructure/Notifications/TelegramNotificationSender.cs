@@ -2,9 +2,6 @@
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure.Options;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace music_time_manager.Infrastructure.Notifications;
 

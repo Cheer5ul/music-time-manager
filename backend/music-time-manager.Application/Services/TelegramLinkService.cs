@@ -23,7 +23,7 @@ public class TelegramLinkService : ITelegramLinkService
         _userRepository = userRepository;
     }
 
-    public async Task<ResultT<string>> CreateLink(Guid userId, CancellationToken ct = default)
+    public async Task<ResultT<string>> CreateLinkToken(Guid userId, CancellationToken ct = default)
     {
         var doesUserExist = await _userRepository.GetById(userId, ct);
         if(doesUserExist == null) return ResultT<string>.Failures([UserErrors.DoesNotExist(userId)]);
@@ -54,6 +54,16 @@ public class TelegramLinkService : ITelegramLinkService
         
         return ResultT<string>.Success(link);
     }
+
+    // public async Task<Result> CreateLink(string token, long chatId, CancellationToken ct = default)
+    // {
+    //     var userId = await _tgRepository.GetUserIdByLinkToken(token, ct);
+    //     if(userId == null) return Result.Failures([UserErrors.DoesNotExist()]);
+    //     
+    //     var tgLink = TelegramLink.Create(userId.Value, chatId);
+    //     
+    //     
+    // }
 
     private async Task<ResultT<string>> UpdateLinkToken(TelegramLinkToken linkToken, CancellationToken ct)
     {

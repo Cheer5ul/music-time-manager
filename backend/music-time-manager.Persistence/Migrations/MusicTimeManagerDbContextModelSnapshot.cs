@@ -122,8 +122,8 @@ namespace music_time_manager.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("ChatId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("UserId", "ChatId");
 

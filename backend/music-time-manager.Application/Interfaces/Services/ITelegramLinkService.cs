@@ -4,5 +4,5 @@ namespace music_time_manager.Application.Services;
 
 public interface ITelegramLinkService
 {
-    Task<ResultT<string>> CreateLink(Guid userId, CancellationToken ct = default);
+    Task<ResultT<string>> CreateLinkToken(Guid userId, CancellationToken ct = default);
 }

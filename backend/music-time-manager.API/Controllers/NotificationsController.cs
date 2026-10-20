@@ -29,7 +29,7 @@ public class NotificationsController : ControllerBase
         var userId = User.GetUserId();
         if (userId is null) return Unauthorized();
         
-        var result = await _tgLinkService.CreateLink(userId.Value, ct);
+        var result = await _tgLinkService.CreateLinkToken(userId.Value, ct);
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result,  HttpContext);
         
