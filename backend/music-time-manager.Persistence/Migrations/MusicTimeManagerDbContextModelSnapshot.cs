@@ -34,7 +34,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SubtaskAssignees");
+                    b.ToTable("SubtaskAssignees", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.SubtaskEntity", b =>
@@ -60,7 +60,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("Subtasks");
+                    b.ToTable("Subtasks", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.TaskAssigneeEntity", b =>
@@ -75,7 +75,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TaskAssignees");
+                    b.ToTable("TaskAssignees", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.TaskEntity", b =>
@@ -114,7 +114,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasIndex("RecreatedFromTaskId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.TelegramLinkEntity", b =>
@@ -127,7 +127,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasKey("UserId", "ChatId");
 
-                    b.ToTable("TelegramLinks");
+                    b.ToTable("TelegramLinks", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.UserEntity", b =>
@@ -149,7 +149,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.TelegramLinkTokenEntity", b =>
@@ -167,7 +167,7 @@ namespace music_time_manager.Persistence.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("TelegramLinkTokens");
+                    b.ToTable("TelegramLinkTokens", (string)null);
                 });
 
             modelBuilder.Entity("music_time_manager.Persistence.Entities.SubtaskAssigneeEntity", b =>
