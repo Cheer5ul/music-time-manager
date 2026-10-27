@@ -27,6 +27,18 @@ public class TelegramRepository : ITelegramRepository
          return tgLinkToken;
     }
 
+    public async Task<TelegramLink?> GetLinkByUserId(Guid userId, CancellationToken ct)
+    {
+        var tgLinkEntity = await _dbContext.TelegramLinks
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == userId, ct);
+        
+        if(tgLinkEntity == null) return null;
+        
+        var tgLink = TelegramLink.Reconstitute(tgLinkEntity.UserId, tgLinkEntity.ChatId);
+        return tgLink;
+    }
+
     public async Task<Guid?> GetUserIdByLinkToken(string token, CancellationToken ct)
     {
         var userId = await _dbContext.TelegramLinkTokens
@@ -36,6 +48,18 @@ public class TelegramRepository : ITelegramRepository
         if(userId == null) return null;
         
         return userId.UserId;
+    }
+
+    public async Task<DateTime?> GetLinkTokenExpiresAt(string token, CancellationToken ct)
+    {
+        var dueDate = await _dbContext.TelegramLinkTokens
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Token == token, ct);
+
+        if (dueDate == null) return null;
+        
+        return dueDate.ExpiresAt;
+        
     }
     
     public async Task CreateTelegramLinkToken(TelegramLinkToken tgLinkToken, CancellationToken ct)
@@ -51,7 +75,7 @@ public class TelegramRepository : ITelegramRepository
         await _dbContext.SaveChangesAsync(ct);
     }
 
-    public async Task CreateTelegramLink(TelegramLink telegramLink, CancellationToken ct)
+    public async Task LinkTelegramAsync(TelegramLink telegramLink, CancellationToken ct)
     {
         var tgLinkEntity = new TelegramLinkEntity()
         {
