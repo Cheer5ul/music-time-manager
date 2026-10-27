@@ -71,6 +71,9 @@ builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddScoped<ITelegramLinkService, TelegramLinkService>();
+builder.Services.AddScoped<TelegramUpdateHandler>();
+
+builder.Services.AddHostedService<TelegramPollingService>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
