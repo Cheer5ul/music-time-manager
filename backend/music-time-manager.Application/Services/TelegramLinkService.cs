@@ -55,15 +55,26 @@ public class TelegramLinkService : ITelegramLinkService
         return ResultT<string>.Success(link);
     }
 
-    // public async Task<Result> CreateLink(string token, long chatId, CancellationToken ct = default)
-    // {
-    //     var userId = await _tgRepository.GetUserIdByLinkToken(token, ct);
-    //     if(userId == null) return Result.Failures([UserErrors.DoesNotExist()]);
-    //     
-    //     var tgLink = TelegramLink.Create(userId.Value, chatId);
-    //     
-    //     
-    // }
+    public async Task<Result> LinkAsync(string token, long chatId, CancellationToken ct = default)
+    {
+        var userId = await _tgRepository.GetUserIdByLinkToken(token, ct);
+        if(userId == null) return Result.Failures([UserErrors.DoesNotExist()]);
+        
+        var doesLinkAlreadyExist = await _tgRepository.GetLinkByUserId(userId.Value, ct);
+        if (doesLinkAlreadyExist is not null) return Result.Failures([TelegramErrors.TelegramAlreadyLinked()]);
+        
+        var linkTokenExpiresAt = await _tgRepository.GetLinkTokenExpiresAt(token, ct);
+        if (linkTokenExpiresAt is null) return Result.Failures([TelegramErrors.LinkTokenNotFound()]);
+        if (linkTokenExpiresAt.Value < DateTime.UtcNow)
+            return Result.Failures([TelegramErrors.LinkTokenNotValidAnyMore()]);
+        
+        var tgLink = TelegramLink.Create(userId.Value, chatId);
+        if(tgLink.IsFailure) return Result.Failures(tgLink.Errors);
+        
+        await _tgRepository.LinkTelegramAsync(tgLink.Value, ct);
+
+        return Result.Success;
+    }
 
     private async Task<ResultT<string>> UpdateLinkToken(TelegramLinkToken linkToken, CancellationToken ct)
     {
