@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using music_time_manager.Core.Errors;
+﻿using music_time_manager.Core.Errors;
 using music_time_manager.Core.Errors.User;
 using music_time_manager.Core.Models;
 using music_time_manager.Core.Result;
