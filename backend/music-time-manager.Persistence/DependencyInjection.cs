@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using music_time_manager.Core.Interfaces;
 using music_time_manager.Persistence.Repositories;
 
 namespace music_time_manager.Persistence;

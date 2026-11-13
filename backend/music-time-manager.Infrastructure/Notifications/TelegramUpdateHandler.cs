@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Rewrite;
+using music_time_manager.Application.Interfaces.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using music_time_manager.Application.Services;
@@ -61,7 +62,7 @@ public class TelegramUpdateHandler
             return Result.Success;
         }
         
-        const string responseSuccess = "Telegram is successfully linked to your account";
+        const string responseSuccess = "Telegram notification system is successfully linked to your account!";
 
         await _botClient.SendMessage(
             message.Chat.Id,

@@ -15,6 +15,7 @@ using music_time_manager.Infrastructure.Options;
 using music_time_manager.Persistence;
 using music_time_manager.API.Extensions;
 using music_time_manager.API.Middlewares.ExceptionHandlers;
+using music_time_manager.Application.Interfaces.Services;
 using music_time_manager.Infrastructure.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
