@@ -9,6 +9,7 @@ public static class TelegramErrors
         public const string LinkTokenNotFound = "Telegram.LinkTokenNotFound";
         public const string LinkTokenNotValidAnyMore = "Telegram.TokenNotValidAnyMore";
         public const string TelegramAlreadyLinked = "Telegram.TelegramAlreadyLinked";
+        public const string UnableToUnlink = "Telegram.UnableToUnlink";
     }
     
     public static Error TokenStillValid() =>
@@ -34,5 +35,10 @@ public static class TelegramErrors
     public static Error TelegramAlreadyLinked() =>
         new Error(Codes.TelegramAlreadyLinked,
             $"Your telegram account has already been linked.",
+            ErrorType.Conflict);
+
+    public static Error UnableToUnlink() =>
+        new Error(Codes.UnableToUnlink,
+            $"You don't have any linked accounts to unlink.",
             ErrorType.Conflict);
 }
