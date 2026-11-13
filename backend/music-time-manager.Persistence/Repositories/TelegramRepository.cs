@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using music_time_manager.Core.Interfaces;
 using music_time_manager.Core.Models;
 using music_time_manager.Persistence.Entities;
 using Task = System.Threading.Tasks.Task;
@@ -61,6 +62,17 @@ public class TelegramRepository : ITelegramRepository
         return dueDate.ExpiresAt;
         
     }
+
+    public async Task<long?> GetChatIdByUserId(Guid userId, CancellationToken ct)
+    {
+        var chatId = await _dbContext.TelegramLinks
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.UserId == userId, ct);
+        
+        if (chatId == null) return null;
+
+        return chatId.ChatId;
+    }
     
     public async Task CreateTelegramLinkToken(TelegramLinkToken tgLinkToken, CancellationToken ct)
     {
@@ -96,5 +108,25 @@ public class TelegramRepository : ITelegramRepository
                     .SetProperty(e => e.ExpiresAt, 
                         DateTime.UtcNow + TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES)),
                 ct);
+    }
+
+    public async Task UnlinkAccount(Guid userId, CancellationToken ct)
+    {
+        var strategy = _dbContext.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+
+            await _dbContext.TelegramLinks
+                .Where(e => e.UserId == userId)
+                .ExecuteDeleteAsync(ct);
+
+            await _dbContext.TelegramLinkTokens
+                .Where(e => e.UserId == userId)
+                .ExecuteDeleteAsync(ct);
+
+            await transaction.CommitAsync(ct);
+        });
     }
 }

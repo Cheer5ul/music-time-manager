@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using music_time_manager.API.Extensions;
+using music_time_manager.Application.Interfaces.Services;
 using music_time_manager.Application.Services;
 
 namespace music_time_manager.API.Controllers;
@@ -22,7 +23,7 @@ public class NotificationsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost]
+    [HttpPost("telegram/link")]
     [EnableRateLimiting("per-user")]
     public async Task<ActionResult> CreateTgLinkToken(CancellationToken ct)
     {
@@ -30,6 +31,21 @@ public class NotificationsController : ControllerBase
         if (userId is null) return Unauthorized();
         
         var result = await _tgLinkService.CreateLinkToken(userId.Value, ct);
+        
+        if(result.IsFailure) return _failureHandler.HandleFailure(result,  HttpContext);
+        
+        return Ok(result.Value);
+    }
+
+    [Authorize]
+    [HttpPost("telegram/unlink")]
+    [EnableRateLimiting("per-user")]
+    public async Task<ActionResult> UnlinkAccount(CancellationToken ct)
+    {
+        var userId = User.GetUserId();
+        if (userId is null) return Unauthorized();
+
+        var result = await _tgLinkService.UnlinkTgAccount(userId.Value, ct);
         
         if(result.IsFailure) return _failureHandler.HandleFailure(result,  HttpContext);
         

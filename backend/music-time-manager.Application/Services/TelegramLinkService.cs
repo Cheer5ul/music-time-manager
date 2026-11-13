@@ -1,5 +1,7 @@
-﻿using music_time_manager.Core.Errors;
+﻿using music_time_manager.Application.Interfaces.Services;
+using music_time_manager.Core.Errors;
 using music_time_manager.Core.Errors.User;
+using music_time_manager.Core.Interfaces;
 using music_time_manager.Core.Models;
 using music_time_manager.Core.Result;
 using music_time_manager.Persistence.Repositories;
@@ -27,9 +29,13 @@ public class TelegramLinkService : ITelegramLinkService
         var doesUserExist = await _userRepository.GetById(userId, ct);
         if(doesUserExist == null) return ResultT<string>.Failures([UserErrors.DoesNotExist(userId)]);
         
+        // Checking whether chat is already started
+       var isChatStarted = await _tgRepository.GetChatIdByUserId(userId, ct);
+       if (isChatStarted != null) return ResultT<string>.Failures([TelegramErrors.TelegramAlreadyLinked()]);
+        
         var checkTgLinkToken = await _tgRepository.GetLinkTokenByUserId(userId, ct);
         if (checkTgLinkToken != null && DateTime.UtcNow - checkTgLinkToken.ExpiresAt <
-            TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES)) /* TODO:  AND CHAT WITH BOT NOT STARTED YET*/
+            TimeSpan.FromMinutes(TelegramLinkToken.LINK_TOKEN_EXPIRES_AFTER_MINUTES)) 
         {
             return ResultT<string>.Failures([TelegramErrors.TelegramRegistrationLinkStillValid(
                 _tgNotificationSender.BuildStartLink(checkTgLinkToken.Token))]);
@@ -57,7 +63,7 @@ public class TelegramLinkService : ITelegramLinkService
     public async Task<Result> LinkAsync(string token, long chatId, CancellationToken ct = default)
     {
         var userId = await _tgRepository.GetUserIdByLinkToken(token, ct);
-        if(userId == null) return Result.Failures([UserErrors.DoesNotExist()]);
+        if(userId == null) return Result.Failures([TelegramErrors.LinkTokenNotValidAnyMore()]);
         
         var doesLinkAlreadyExist = await _tgRepository.GetLinkByUserId(userId.Value, ct);
         if (doesLinkAlreadyExist is not null) return Result.Failures([TelegramErrors.TelegramAlreadyLinked()]);
@@ -83,5 +89,18 @@ public class TelegramLinkService : ITelegramLinkService
         await _tgRepository.UpdateLinkToken(linkToken.UserId, updateResult.Value!, ct);
         
         return ResultT<string>.Success(updateResult.Value!);
+    }
+    
+    public async Task<ResultT<string>> UnlinkTgAccount(Guid userId,  CancellationToken ct)
+    {
+        var doesUserExist = await _userRepository.GetById(userId, ct);
+        if(doesUserExist == null) return ResultT<string>.Failures([UserErrors.DoesNotExist(userId)]);
+        
+        var isChatStarted = await _tgRepository.GetChatIdByUserId(userId, ct);
+        if (isChatStarted == null) return ResultT<string>.Failures([TelegramErrors.UnableToUnlink()]);
+
+        await _tgRepository.UnlinkAccount(userId, ct);
+
+        return ResultT<string>.Success($"Your account has been unlinked.");
     }
 }
