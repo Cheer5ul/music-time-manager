@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using music_time_manager.Application.Interfaces.Services;
 using music_time_manager.Application.Services;
 using music_time_manager.Infrastructure.Options;
 using Telegram.Bot;
