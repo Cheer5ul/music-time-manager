@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using music_time_manager.API.Extensions;
@@ -20,6 +20,17 @@ public class NotificationsController : ControllerBase
     {
         _tgLinkService = tgLinkService;
         _failureHandler = failureHandler;
+    }
+
+    [Authorize]
+    [HttpGet("telegram/status")]
+    [EnableRateLimiting("per-user")]
+    public async Task<ActionResult> GetTelegramStatus(CancellationToken ct)
+    {
+        var userId = User.GetUserId();
+        if (userId is null) return Unauthorized();
+
+        return Ok(new { isLinked = await _tgLinkService.IsLinked(userId.Value, ct) });
     }
 
     [Authorize]

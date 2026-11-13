@@ -1,4 +1,4 @@
-﻿using music_time_manager.Application.Interfaces.Services;
+using music_time_manager.Application.Interfaces.Services;
 using music_time_manager.Core.Errors;
 using music_time_manager.Core.Errors.User;
 using music_time_manager.Core.Interfaces;
@@ -59,6 +59,9 @@ public class TelegramLinkService : ITelegramLinkService
         
         return ResultT<string>.Success(link);
     }
+
+    public async Task<bool> IsLinked(Guid userId, CancellationToken ct = default) => 
+        await _tgRepository.GetChatIdByUserId(userId, ct) is not null;
 
     public async Task<Result> LinkAsync(string token, long chatId, CancellationToken ct = default)
     {
