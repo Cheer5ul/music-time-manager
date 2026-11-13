@@ -10,6 +10,7 @@ public static class TelegramErrors
         public const string LinkTokenNotValidAnyMore = "Telegram.TokenNotValidAnyMore";
         public const string TelegramAlreadyLinked = "Telegram.TelegramAlreadyLinked";
         public const string UnableToUnlink = "Telegram.UnableToUnlink";
+        public const string UnableToNotifyUser = "Telegram.UnableToNotifyUser";
     }
     
     public static Error TokenStillValid() =>
@@ -40,5 +41,10 @@ public static class TelegramErrors
     public static Error UnableToUnlink() =>
         new Error(Codes.UnableToUnlink,
             $"You don't have any linked accounts to unlink.",
+            ErrorType.Conflict);
+
+    public static Error UnableToNotifyUser(string username) =>
+        new Error(Codes.UnableToNotifyUser,
+            $"Unable to notify user: {username}. The user doesn't have notifications enabled.",
             ErrorType.Conflict);
 }
