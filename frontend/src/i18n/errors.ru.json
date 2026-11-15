@@ -13,5 +13,12 @@
   "User.FailedToLogin": "Неверный логин или пароль.",
   "User.UsernameAlreadyUsed": "Такой логин уже занят.",
   "User.InvalidPassword": "Некорректный пароль.",
-  "User.IncorrectCurrentPassword": "Текущий пароль указан неверно."
+  "User.IncorrectCurrentPassword": "Текущий пароль указан неверно.",
+  "Telegram.TokenStillValid": "Срок действия токена ещё не истёк. Обновлять его не нужно.",
+  "Telegram.TelegramRegistrationLinkStillValid": "Ссылка для подключения Telegram уже создана и ещё действует.",
+  "Telegram.LinkTokenNotFound": "Ссылка для подключения Telegram не найдена.",
+  "Telegram.TokenNotValidAnyMore": "Срок действия ссылки для подключения Telegram истёк. Запросите новую ссылку.",
+  "Telegram.TelegramAlreadyLinked": "Аккаунт Telegram уже подключён.",
+  "Telegram.UnableToUnlink": "Нет подключённого аккаунта Telegram для отключения.",
+  "Telegram.UnableToNotifyUser": "Не удалось отправить уведомление пользователю: у него не подключены уведомления."
 }

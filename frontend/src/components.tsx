@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import {
   CalendarDays,
   CheckSquare,
+  Bell,
   ListTodo,
   Moon,
   Plus,
@@ -23,6 +24,9 @@ import { cn } from "./lib";
 import type { User } from "./types";
 import { CreateTaskModal } from "./task-modals";
 import { setAppLanguage } from "./i18n";
+import { apiClient, getApiErrorMessage } from "./api/client";
+import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
 
 export function Button({
   className,
@@ -203,7 +207,76 @@ function LanguageToggle() {
 
 export function AppShell() {
   const { t } = useTranslation();
+  const [notificationModal, setNotificationModal] = useState(false);
+  const [notificationsLinked, setNotificationsLinked] = useState(false);
+  const [notificationPending, setNotificationPending] = useState(false);
+  const [notificationError, setNotificationError] = useState("");
+  const [notificationNotice, setNotificationNotice] = useState("");
+  const [notificationErrorStage, setNotificationErrorStage] = useState<"status" | "action">("status");
   const openCreate = () => window.dispatchEvent(new Event("open-new-task"));
+  const openNotifications = async () => {
+    setNotificationModal(true);
+    setNotificationError("");
+    setNotificationNotice("");
+    setNotificationPending(true);
+    try {
+      const response = await apiClient.get<{ isLinked: boolean }>("/notifications/telegram/status");
+      setNotificationsLinked(response.data.isLinked);
+    } catch (error) {
+      setNotificationErrorStage("status");
+      setNotificationError(getApiErrorMessage(error));
+    } finally {
+      setNotificationPending(false);
+    }
+  };
+  const updateNotifications = async () => {
+    setNotificationPending(true);
+    setNotificationError("");
+    setNotificationNotice("");
+    try {
+      if (notificationsLinked) {
+        await apiClient.post("/notifications/telegram/unlink");
+        setNotificationsLinked(false);
+      } else {
+        const response = await apiClient.post<unknown>("/notifications/telegram/link");
+        const data = response.data;
+        const link = typeof data === "string"
+          ? data
+          : data && typeof data === "object" && "url" in data
+            ? String(data.url)
+            : data && typeof data === "object" && "link" in data
+              ? String(data.link)
+              : "";
+        if (!link) throw new Error(t("notifications.linkFailed"));
+        window.location.assign(link);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data as {
+          type?: string;
+          errors?: Array<{ code?: string; description?: string }>;
+          detail?: string;
+        } | undefined;
+        const code = data?.errors?.[0]?.code ?? data?.type;
+        if (code === "Telegram.TelegramRegistrationLinkStillValid") {
+          const message = data?.errors?.[0]?.description ?? data?.detail ?? "";
+          const link = message.match(/https?:\/\/\S+/)?.[0]?.replace(/[),.;]+$/, "");
+          if (link) {
+            window.location.assign(link);
+            return;
+          }
+          setNotificationNotice(t("notifications.linkAlreadyCreated"));
+          setNotificationErrorStage("action");
+          setNotificationPending(false);
+          return;
+        }
+      }
+      setNotificationErrorStage("action");
+      setNotificationError(getApiErrorMessage(error));
+    } finally {
+      setNotificationPending(false);
+    }
+  };
   const nav = [
     { to: "/today", label: t("nav.today"), icon: CalendarDays },
     { to: "/tasks", label: t("nav.tasks"), icon: ListTodo },
@@ -239,6 +312,14 @@ export function AppShell() {
                 {item.label}
               </NavLink>
             ))}
+          <button
+            type="button"
+            className="focus-ring flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition text-stone-500 hover:bg-stone-50 hover:text-stone-950 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+            onClick={openNotifications}
+          >
+            <Bell size={17} />
+            {t("notifications.connect")}
+          </button>
           </nav>
         </aside>
         <main className="min-w-0 md:pl-60">
@@ -295,6 +376,68 @@ export function AppShell() {
         </main>
       </div>
       <CreateTaskModal />
+      <AnimatePresence>
+        {notificationModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 grid place-items-center bg-stone-950/20 p-4"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setNotificationModal(false);
+            }}
+          >
+            <Card className="w-full max-w-md p-5 shadow-xl">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">{t("notifications.title")}</h2>
+                <button
+                  type="button"
+                  aria-label={t("common.close")}
+                  onClick={() => setNotificationModal(false)}
+                  className="rounded p-1 text-stone-500 hover:bg-stone-100 dark:hover:bg-neutral-800"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <p className="mt-4 text-sm text-stone-700 dark:text-neutral-300">
+                {notificationPending
+                  ? t("common.loading")
+                  : notificationsLinked
+                    ? t("notifications.unlinkPrompt")
+                    : t("notifications.linkPrompt")}
+              </p>
+              {notificationError && (
+                <p role="alert" className="mt-4 text-sm text-red-700 dark:text-red-400">
+                  {notificationError}
+                </p>
+              )}
+              {notificationNotice && (
+                <p role="status" className="mt-4 text-sm text-stone-600 dark:text-neutral-400">
+                  {notificationNotice}
+                </p>
+              )}
+              <div className="mt-5 flex justify-end gap-2">
+                <Button type="button" variant="secondary" onClick={() => setNotificationModal(false)}>
+                  {t("notifications.no")}
+                </Button>
+                {!notificationPending && !notificationError && (
+                  <Button type="button" onClick={updateNotifications}>
+                    {t("notifications.yes")}
+                  </Button>
+                )}
+                {notificationError && !notificationPending && (
+                  <Button
+                    type="button"
+                    onClick={notificationErrorStage === "status" ? openNotifications : updateNotifications}
+                  >
+                    {t("common.retry")}
+                  </Button>
+                )}
+              </div>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

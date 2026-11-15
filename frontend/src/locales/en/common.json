@@ -29,7 +29,19 @@
     "notAssigned": "No assignees assigned.",
     "assign": "Assign",
     "unassigned": "Unassigned",
-    "search": "Search"
+    "search": "Search",
+    "retry": "Retry"
+  },
+  "notifications": {
+    "connect": "Connect notifications",
+    "title": "Telegram notifications",
+    "linkPrompt": "Would you like to connect notifications?",
+    "unlinkPrompt": "Notifications are already connected. Would you like to disconnect?",
+    "yes": "Yes",
+    "no": "No",
+    "disconnect": "Disconnect",
+    "linkFailed": "The server did not return a Telegram registration link.",
+    "linkAlreadyCreated": "A Telegram registration link already exists. Press Yes to open it."
   },
   "status": {
     "todo": "To do",
