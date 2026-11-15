@@ -5,13 +5,17 @@ import errorMessagesEn from "../i18n/errors.en.json";
 import { toast } from "sonner";
 import i18n from "../i18n";
 
-const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "https://localhost:7075";
+const apiBaseUrl =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "https://localhost:7075";
 
-export const apiClient = axios.create({ baseURL: apiBaseUrl, withCredentials: true });
+export const apiClient = axios.create({
+  baseURL: apiBaseUrl,
+  withCredentials: true,
+});
 
 apiClient.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     const url = String(error.config?.url ?? "");
     if (error.response?.status === 429) {
       const retryAfter = Number(error.response.headers?.["retry-after"]);
@@ -22,7 +26,12 @@ apiClient.interceptors.response.use(
         { id: "rate-limit" },
       );
     }
-    if (error.response?.status === 401 && !url.startsWith("/auth/") && window.location.pathname !== "/login") window.location.assign("/login");
+    if (
+      error.response?.status === 401 &&
+      !url.startsWith("/auth/") &&
+      window.location.pathname !== "/login"
+    )
+      window.location.assign("/login");
     return Promise.reject(error);
   },
 );
@@ -31,10 +40,15 @@ export function getApiErrorMessage(error: unknown) {
   if (axios.isAxiosError<ProblemDetails>(error)) {
     const data = error.response?.data;
     const code = data?.errors?.[0]?.code ?? data?.type;
-    const messages = i18n.language.startsWith("ru") ? errorMessagesRu : errorMessagesEn;
-    if (code && code in messages) return messages[code as keyof typeof messages];
-    if (code && code in errorMessagesEn) return errorMessagesEn[code as keyof typeof errorMessagesEn];
-    const serverMessage = data?.detail || data?.errors?.[0]?.description || data?.title;
+    const messages = i18n.language.startsWith("ru")
+      ? errorMessagesRu
+      : errorMessagesEn;
+    if (code && code in messages)
+      return messages[code as keyof typeof messages];
+    if (code && code in errorMessagesEn)
+      return errorMessagesEn[code as keyof typeof errorMessagesEn];
+    const serverMessage =
+      data?.detail || data?.errors?.[0]?.description || data?.title;
     if (serverMessage) return serverMessage;
     return error.response ? i18n.t("errors.request") : i18n.t("errors.network");
   }
