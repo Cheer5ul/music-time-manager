@@ -28,5 +28,14 @@ export interface Task {
   subtasks: Subtask[] | null;
 }
 
-export interface UserStats { completedTasks: number; missedTasks: number; }
-export interface ProblemDetails { type?: string; title?: string; detail?: string; status?: number; errors?: Array<{ code: string; description: string }>; }
+export interface UserStats {
+  completedTasks: number;
+  missedTasks: number;
+}
+export interface ProblemDetails {
+  type?: string;
+  title?: string;
+  detail?: string;
+  status?: number;
+  errors?: Array<{ code: string; description: string }>;
+}

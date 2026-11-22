@@ -15,6 +15,8 @@ using music_time_manager.Infrastructure.Options;
 using music_time_manager.Persistence;
 using music_time_manager.API.Extensions;
 using music_time_manager.API.Middlewares.ExceptionHandlers;
+using music_time_manager.Application.Interfaces.Services;
+using music_time_manager.Infrastructure.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,7 +71,14 @@ builder.Services.AddScoped<IFailureHandler, FailureHandler>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+builder.Services.AddScoped<ITelegramLinkService, TelegramLinkService>();
+builder.Services.AddScoped<TelegramUpdateHandler>();
+
+builder.Services.AddHostedService<TelegramPollingService>();
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddTelegramService(builder.Configuration);
 
 builder.Services.AddRateLimiter(options =>
 {

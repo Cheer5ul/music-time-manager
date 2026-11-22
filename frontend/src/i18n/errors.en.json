@@ -13,5 +13,12 @@
   "User.FailedToLogin": "Incorrect username or password.",
   "User.UsernameAlreadyUsed": "This username is already in use.",
   "User.InvalidPassword": "Please enter a valid password.",
-  "User.IncorrectCurrentPassword": "The current password is incorrect."
+  "User.IncorrectCurrentPassword": "The current password is incorrect.",
+  "Telegram.TokenStillValid": "The token is still valid; there is no need to update it.",
+  "Telegram.TelegramRegistrationLinkStillValid": "Your Telegram registration link has already been created and is still valid.",
+  "Telegram.LinkTokenNotFound": "The Telegram registration link was not found.",
+  "Telegram.TokenNotValidAnyMore": "The Telegram registration link has expired. Request a new link.",
+  "Telegram.TelegramAlreadyLinked": "The Telegram account is already connected.",
+  "Telegram.UnableToUnlink": "There is no connected Telegram account to disconnect.",
+  "Telegram.UnableToNotifyUser": "Unable to notify the user because notifications are not enabled."
 }

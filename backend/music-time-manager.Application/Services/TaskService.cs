@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using music_time_manager.Application.Interfaces.Services;
+using music_time_manager.Infrastructure;
 using music_time_manager.Core.Errors;
 using music_time_manager.Core.Errors.User;
 using music_time_manager.Core.Models;
@@ -12,12 +13,15 @@ public class TaskService : ITaskService
 {
     private readonly ITaskRepository _taskRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ITelegramNotificationSender _tgNotificationSender;
     
     public TaskService(ITaskRepository repository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        ITelegramNotificationSender tgNotificationSender)
     {
         _taskRepository = repository;
         _userRepository = userRepository;
+        _tgNotificationSender = tgNotificationSender;
     }
 
     public async Task<ResultT<List<Task>>> GetTasks(
@@ -72,6 +76,7 @@ public class TaskService : ITaskService
         if(task.IsFailure) return Result.Failures(task.Errors);
         
         await  _taskRepository.CreateTask(task.Value!, ct);
+        
         return Result.Success;
     }
 
@@ -96,6 +101,13 @@ public class TaskService : ITaskService
             .ToList();
 
         await _taskRepository.ReplaceTaskAssignees(taskId, assignees, ct);
+        
+        // Notifying users
+        foreach (var userId in userIds)
+        {
+            await _tgNotificationSender.NotifyUserAsync(userId, ct);
+        }
+        
         return Result.Success;
     }
 

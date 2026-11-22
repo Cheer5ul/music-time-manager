@@ -6,7 +6,11 @@ import { App } from "./App";
 import "./i18n";
 import "./styles/globals.css";
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 60000, refetchOnWindowFocus: false } } });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 60000, refetchOnWindowFocus: false },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
