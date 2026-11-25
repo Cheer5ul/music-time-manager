@@ -352,14 +352,14 @@ export function AppShell() {
             </div>
           </header>
           <div className="mx-auto max-w-6xl px-4 py-7 md:px-8">
-            <div className="mb-5 grid grid-cols-3 gap-1 border-b border-stone-200 pb-3 dark:border-neutral-800 md:hidden">
+            <div className="mb-5 flex gap-1 overflow-x-auto border-b border-stone-200 pb-3 dark:border-neutral-800 md:hidden">
               {nav.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
                   className={({ isActive }) =>
                     cn(
-                      "flex min-w-0 items-center justify-center gap-1 rounded-md px-1 py-1.5 text-xs",
+                      "flex flex-none items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs",
                       isActive
                         ? "bg-stone-200 text-stone-950 dark:bg-neutral-800 dark:text-neutral-100"
                         : "text-stone-500 dark:text-neutral-400",
@@ -370,6 +370,14 @@ export function AppShell() {
                   <span className="truncate">{item.label}</span>
                 </NavLink>
               ))}
+              <button
+                type="button"
+                className="focus-ring flex flex-none items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs text-stone-500 transition hover:bg-stone-100 hover:text-stone-950 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                onClick={openNotifications}
+              >
+                <Bell className="shrink-0" size={14} />
+                <span>{t("notifications.connect")}</span>
+              </button>
             </div>
             <Outlet />
           </div>
